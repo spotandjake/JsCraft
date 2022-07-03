@@ -1,4 +1,4 @@
-import * as glMatrix from "./common.js";
+import * as glMatrix from './common.js';
 /**
  * 2 Dimensional Vector
  * @module vec2
@@ -236,7 +236,7 @@ export function scaleAndAdd(out, a, b, scale) {
 
 export function distance(a, b) {
   var x = b[0] - a[0],
-      y = b[1] - a[1];
+    y = b[1] - a[1];
   return Math.hypot(x, y);
 }
 /**
@@ -249,7 +249,7 @@ export function distance(a, b) {
 
 export function squaredDistance(a, b) {
   var x = b[0] - a[0],
-      y = b[1] - a[1];
+    y = b[1] - a[1];
   return x * x + y * y;
 }
 /**
@@ -261,7 +261,7 @@ export function squaredDistance(a, b) {
 
 export function length(a) {
   var x = a[0],
-      y = a[1];
+    y = a[1];
   return Math.hypot(x, y);
 }
 /**
@@ -273,7 +273,7 @@ export function length(a) {
 
 export function squaredLength(a) {
   var x = a[0],
-      y = a[1];
+    y = a[1];
   return x * x + y * y;
 }
 /**
@@ -312,7 +312,7 @@ export function inverse(out, a) {
 
 export function normalize(out, a) {
   var x = a[0],
-      y = a[1];
+    y = a[1];
   var len = x * x + y * y;
 
   if (len > 0) {
@@ -363,7 +363,7 @@ export function cross(out, a, b) {
 
 export function lerp(out, a, b, t) {
   var ax = a[0],
-      ay = a[1];
+    ay = a[1];
   out[0] = ax + t * (b[0] - ax);
   out[1] = ay + t * (b[1] - ay);
   return out;
@@ -394,7 +394,7 @@ export function random(out, scale) {
 
 export function transformMat2(out, a, m) {
   var x = a[0],
-      y = a[1];
+    y = a[1];
   out[0] = m[0] * x + m[2] * y;
   out[1] = m[1] * x + m[3] * y;
   return out;
@@ -410,7 +410,7 @@ export function transformMat2(out, a, m) {
 
 export function transformMat2d(out, a, m) {
   var x = a[0],
-      y = a[1];
+    y = a[1];
   out[0] = m[0] * x + m[2] * y + m[4];
   out[1] = m[1] * x + m[3] * y + m[5];
   return out;
@@ -427,7 +427,7 @@ export function transformMat2d(out, a, m) {
 
 export function transformMat3(out, a, m) {
   var x = a[0],
-      y = a[1];
+    y = a[1];
   out[0] = m[0] * x + m[3] * y + m[6];
   out[1] = m[1] * x + m[4] * y + m[7];
   return out;
@@ -462,9 +462,9 @@ export function transformMat4(out, a, m) {
 export function rotate(out, a, b, rad) {
   //Translate point to the origin
   var p0 = a[0] - b[0],
-      p1 = a[1] - b[1],
-      sinC = Math.sin(rad),
-      cosC = Math.cos(rad); //perform rotation and translate to correct position
+    p1 = a[1] - b[1],
+    sinC = Math.sin(rad),
+    cosC = Math.cos(rad); //perform rotation and translate to correct position
 
   out[0] = p0 * cosC - p1 * sinC + b[0];
   out[1] = p0 * sinC + p1 * cosC + b[1];
@@ -479,13 +479,13 @@ export function rotate(out, a, b, rad) {
 
 export function angle(a, b) {
   var x1 = a[0],
-      y1 = a[1],
-      x2 = b[0],
-      y2 = b[1],
-      // mag is the product of the magnitudes of a and b
-  mag = Math.sqrt((x1 * x1 + y1 * y1) * (x2 * x2 + y2 * y2)),
-      // mag &&.. short circuits if mag == 0
-  cosine = mag && (x1 * x2 + y1 * y2) / mag; // Math.min(Math.max(cosine, -1), 1) clamps the cosine between -1 and 1
+    y1 = a[1],
+    x2 = b[0],
+    y2 = b[1],
+    // mag is the product of the magnitudes of a and b
+    mag = Math.sqrt((x1 * x1 + y1 * y1) * (x2 * x2 + y2 * y2)),
+    // mag &&.. short circuits if mag == 0
+    cosine = mag && (x1 * x2 + y1 * y2) / mag; // Math.min(Math.max(cosine, -1), 1) clamps the cosine between -1 and 1
 
   return Math.acos(Math.min(Math.max(cosine, -1), 1));
 }
@@ -509,7 +509,7 @@ export function zero(out) {
  */
 
 export function str(a) {
-  return "vec2(" + a[0] + ", " + a[1] + ")";
+  return `vec2(${a[0]}, ${a[1]})`;
 }
 /**
  * Returns whether or not the vectors exactly have the same elements in the same position (when compared with ===)
@@ -531,54 +531,57 @@ export function exactEquals(a, b) {
  */
 
 export function equals(a, b) {
-  var a0 = a[0],
-      a1 = a[1];
-  var b0 = b[0],
-      b1 = b[1];
-  return Math.abs(a0 - b0) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a0), Math.abs(b0)) && Math.abs(a1 - b1) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a1), Math.abs(b1));
+  const a0 = a[0],
+    a1 = a[1];
+  const b0 = b[0],
+    b1 = b[1];
+  return (
+    Math.abs(a0 - b0) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a0), Math.abs(b0)) &&
+    Math.abs(a1 - b1) <= glMatrix.EPSILON * Math.max(1.0, Math.abs(a1), Math.abs(b1))
+  );
 }
 /**
  * Alias for {@link vec2.length}
  * @function
  */
 
-export var len = length;
+export const len = length;
 /**
  * Alias for {@link vec2.subtract}
  * @function
  */
 
-export var sub = subtract;
+export const sub = subtract;
 /**
  * Alias for {@link vec2.multiply}
  * @function
  */
 
-export var mul = multiply;
+export const mul = multiply;
 /**
  * Alias for {@link vec2.divide}
  * @function
  */
 
-export var div = divide;
+export const div = divide;
 /**
  * Alias for {@link vec2.distance}
  * @function
  */
 
-export var dist = distance;
+export const dist = distance;
 /**
  * Alias for {@link vec2.squaredDistance}
  * @function
  */
 
-export var sqrDist = squaredDistance;
+export const sqrDist = squaredDistance;
 /**
  * Alias for {@link vec2.squaredLength}
  * @function
  */
 
-export var sqrLen = squaredLength;
+export const sqrLen = squaredLength;
 /**
  * Perform some operation over an array of vec2s.
  *
@@ -592,7 +595,7 @@ export var sqrLen = squaredLength;
  * @function
  */
 
-export var forEach = function () {
+export const forEach = (function () {
   var vec = create();
   return function (a, stride, offset, count, fn, arg) {
     var i, l;
@@ -621,4 +624,4 @@ export var forEach = function () {
 
     return a;
   };
-}();
+})();
