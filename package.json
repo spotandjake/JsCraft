@@ -1,0 +1,23 @@
+{
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "dev": "vite --port 443 --host 0.0.0.0",
+    "build": "vite build && bash build.sh",
+    "preview": "yarn build && yarn host",
+    "lint": "eslint ./src/main.ts"
+  },
+  "dependencies": {
+    "@swc/core": "^1.2.160",
+    "vite": "^2.8.6"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.16.0",
+    "@typescript-eslint/parser": "^5.16.0",
+    "eslint": "^8.11.0",
+    "prettier": "^2.7.1",
+    "sass": "^1.49.9",
+    "typescript": "^4.6.2"
+  }
+}
