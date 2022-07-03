@@ -16,8 +16,8 @@ class Block {
     this.blockType = blockType;
   }
   public render(side: BlockDirection, outMesh: number[] = []): number[] {
-    const { x, y, z } = this;
     if (this.blockType === BlockType.Air) return [];
+    const { x, y, z } = this;
     // Return The Different Side Meshes
     // TODO: Bind this to block data
     const color = {

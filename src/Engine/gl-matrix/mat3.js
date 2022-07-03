@@ -11,7 +11,7 @@ import * as glMatrix from './common.js';
  */
 
 export function create() {
-  var out = new glMatrix.ARRAY_TYPE(9);
+  const out = new glMatrix.ARRAY_TYPE(9);
 
   if (glMatrix.ARRAY_TYPE != Float32Array) {
     out[1] = 0;
@@ -55,7 +55,7 @@ export function fromMat4(out, a) {
  */
 
 export function clone(a) {
-  var out = new glMatrix.ARRAY_TYPE(9);
+  const out = new glMatrix.ARRAY_TYPE(9);
   out[0] = a[0];
   out[1] = a[1];
   out[2] = a[2];
@@ -103,7 +103,7 @@ export function copy(out, a) {
  */
 
 export function fromValues(m00, m01, m02, m10, m11, m12, m20, m21, m22) {
-  var out = new glMatrix.ARRAY_TYPE(9);
+  const out = new glMatrix.ARRAY_TYPE(9);
   out[0] = m00;
   out[1] = m01;
   out[2] = m02;
@@ -173,7 +173,7 @@ export function identity(out) {
 export function transpose(out, a) {
   // If we are transposing ourselves we can skip a few steps but have to cache some values
   if (out === a) {
-    var a01 = a[1],
+    const a01 = a[1],
       a02 = a[2],
       a12 = a[5];
     out[1] = a[3];
@@ -205,23 +205,23 @@ export function transpose(out, a) {
  */
 
 export function invert(out, a) {
-  var a00 = a[0],
+  const a00 = a[0],
     a01 = a[1],
     a02 = a[2];
-  var a10 = a[3],
+  const a10 = a[3],
     a11 = a[4],
     a12 = a[5];
-  var a20 = a[6],
+  const a20 = a[6],
     a21 = a[7],
     a22 = a[8];
-  var b01 = a22 * a11 - a12 * a21;
-  var b11 = -a22 * a10 + a12 * a20;
-  var b21 = a21 * a10 - a11 * a20; // Calculate the determinant
+  const b01 = a22 * a11 - a12 * a21;
+  const b11 = -a22 * a10 + a12 * a20;
+  const b21 = a21 * a10 - a11 * a20; // Calculate the determinant
 
-  var det = a00 * b01 + a01 * b11 + a02 * b21;
+  let det = a00 * b01 + a01 * b11 + a02 * b21;
 
   if (!det) {
-    return null;
+    return out;
   }
 
   det = 1.0 / det;
@@ -245,13 +245,13 @@ export function invert(out, a) {
  */
 
 export function adjoint(out, a) {
-  var a00 = a[0],
+  const a00 = a[0],
     a01 = a[1],
     a02 = a[2];
-  var a10 = a[3],
+  const a10 = a[3],
     a11 = a[4],
     a12 = a[5];
-  var a20 = a[6],
+  const a20 = a[6],
     a21 = a[7],
     a22 = a[8];
   out[0] = a11 * a22 - a12 * a21;
@@ -273,13 +273,13 @@ export function adjoint(out, a) {
  */
 
 export function determinant(a) {
-  var a00 = a[0],
+  const a00 = a[0],
     a01 = a[1],
     a02 = a[2];
-  var a10 = a[3],
+  const a10 = a[3],
     a11 = a[4],
     a12 = a[5];
-  var a20 = a[6],
+  const a20 = a[6],
     a21 = a[7],
     a22 = a[8];
   return (
@@ -296,22 +296,22 @@ export function determinant(a) {
  */
 
 export function multiply(out, a, b) {
-  var a00 = a[0],
+  const a00 = a[0],
     a01 = a[1],
     a02 = a[2];
-  var a10 = a[3],
+  const a10 = a[3],
     a11 = a[4],
     a12 = a[5];
-  var a20 = a[6],
+  const a20 = a[6],
     a21 = a[7],
     a22 = a[8];
-  var b00 = b[0],
+  const b00 = b[0],
     b01 = b[1],
     b02 = b[2];
-  var b10 = b[3],
+  const b10 = b[3],
     b11 = b[4],
     b12 = b[5];
-  var b20 = b[6],
+  const b20 = b[6],
     b21 = b[7],
     b22 = b[8];
   out[0] = b00 * a00 + b01 * a10 + b02 * a20;
@@ -335,7 +335,7 @@ export function multiply(out, a, b) {
  */
 
 export function translate(out, a, v) {
-  var a00 = a[0],
+  const a00 = a[0],
     a01 = a[1],
     a02 = a[2],
     a10 = a[3],
@@ -367,7 +367,7 @@ export function translate(out, a, v) {
  */
 
 export function rotate(out, a, rad) {
-  var a00 = a[0],
+  const a00 = a[0],
     a01 = a[1],
     a02 = a[2],
     a10 = a[3],
@@ -399,7 +399,7 @@ export function rotate(out, a, rad) {
  **/
 
 export function scale(out, a, v) {
-  var x = v[0],
+  const x = v[0],
     y = v[1];
   out[0] = x * a[0];
   out[1] = x * a[1];
@@ -449,7 +449,7 @@ export function fromTranslation(out, v) {
  */
 
 export function fromRotation(out, rad) {
-  var s = Math.sin(rad),
+  const s = Math.sin(rad),
     c = Math.cos(rad);
   out[0] = c;
   out[1] = s;
@@ -516,22 +516,22 @@ export function fromMat2d(out, a) {
  */
 
 export function fromQuat(out, q) {
-  var x = q[0],
+  const x = q[0],
     y = q[1],
     z = q[2],
     w = q[3];
-  var x2 = x + x;
-  var y2 = y + y;
-  var z2 = z + z;
-  var xx = x * x2;
-  var yx = y * x2;
-  var yy = y * y2;
-  var zx = z * x2;
-  var zy = z * y2;
-  var zz = z * z2;
-  var wx = w * x2;
-  var wy = w * y2;
-  var wz = w * z2;
+  const x2 = x + x;
+  const y2 = y + y;
+  const z2 = z + z;
+  const xx = x * x2;
+  const yx = y * x2;
+  const yy = y * y2;
+  const zx = z * x2;
+  const zy = z * y2;
+  const zz = z * z2;
+  const wx = w * x2;
+  const wy = w * y2;
+  const wz = w * z2;
   out[0] = 1 - yy - zz;
   out[3] = yx - wz;
   out[6] = zx + wy;
@@ -553,39 +553,39 @@ export function fromQuat(out, q) {
  */
 
 export function normalFromMat4(out, a) {
-  var a00 = a[0],
+  const a00 = a[0],
     a01 = a[1],
     a02 = a[2],
     a03 = a[3];
-  var a10 = a[4],
+  const a10 = a[4],
     a11 = a[5],
     a12 = a[6],
     a13 = a[7];
-  var a20 = a[8],
+  const a20 = a[8],
     a21 = a[9],
     a22 = a[10],
     a23 = a[11];
-  var a30 = a[12],
+  const a30 = a[12],
     a31 = a[13],
     a32 = a[14],
     a33 = a[15];
-  var b00 = a00 * a11 - a01 * a10;
-  var b01 = a00 * a12 - a02 * a10;
-  var b02 = a00 * a13 - a03 * a10;
-  var b03 = a01 * a12 - a02 * a11;
-  var b04 = a01 * a13 - a03 * a11;
-  var b05 = a02 * a13 - a03 * a12;
-  var b06 = a20 * a31 - a21 * a30;
-  var b07 = a20 * a32 - a22 * a30;
-  var b08 = a20 * a33 - a23 * a30;
-  var b09 = a21 * a32 - a22 * a31;
-  var b10 = a21 * a33 - a23 * a31;
-  var b11 = a22 * a33 - a23 * a32; // Calculate the determinant
+  const b00 = a00 * a11 - a01 * a10;
+  const b01 = a00 * a12 - a02 * a10;
+  const b02 = a00 * a13 - a03 * a10;
+  const b03 = a01 * a12 - a02 * a11;
+  const b04 = a01 * a13 - a03 * a11;
+  const b05 = a02 * a13 - a03 * a12;
+  const b06 = a20 * a31 - a21 * a30;
+  const b07 = a20 * a32 - a22 * a30;
+  const b08 = a20 * a33 - a23 * a30;
+  const b09 = a21 * a32 - a22 * a31;
+  const b10 = a21 * a33 - a23 * a31;
+  const b11 = a22 * a33 - a23 * a32; // Calculate the determinant
 
-  var det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
+  let det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
 
   if (!det) {
-    return null;
+    return out;
   }
 
   det = 1.0 / det;
@@ -629,27 +629,7 @@ export function projection(out, width, height) {
  */
 
 export function str(a) {
-  return (
-    'mat3(' +
-    a[0] +
-    ', ' +
-    a[1] +
-    ', ' +
-    a[2] +
-    ', ' +
-    a[3] +
-    ', ' +
-    a[4] +
-    ', ' +
-    a[5] +
-    ', ' +
-    a[6] +
-    ', ' +
-    a[7] +
-    ', ' +
-    a[8] +
-    ')'
-  );
+  return `mat3(${a[0]}, ${a[1]}, ${a[2]}, ${a[3]}, ${a[4]}, ${a[5]}, ${a[6]}, ${a[7]}, ${a[8]})`;
 }
 /**
  * Returns Frobenius norm of a mat3
@@ -776,7 +756,7 @@ export function exactEquals(a, b) {
  */
 
 export function equals(a, b) {
-  var a0 = a[0],
+  const a0 = a[0],
     a1 = a[1],
     a2 = a[2],
     a3 = a[3],
@@ -785,7 +765,7 @@ export function equals(a, b) {
     a6 = a[6],
     a7 = a[7],
     a8 = a[8];
-  var b0 = b[0],
+  const b0 = b[0],
     b1 = b[1],
     b2 = b[2],
     b3 = b[3],
@@ -811,10 +791,10 @@ export function equals(a, b) {
  * @function
  */
 
-export var mul = multiply;
+export const mul = multiply;
 /**
  * Alias for {@link mat3.subtract}
  * @function
  */
 
-export var sub = subtract;
+export const sub = subtract;
