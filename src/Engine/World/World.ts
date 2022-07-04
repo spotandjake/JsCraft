@@ -17,7 +17,8 @@ class World {
   private worldSpawn: Vector = new Vector(0, 0, 0);
   private chunkSize = 32;
   private renderDistance: number;
-  // Optimal loadArea = 7
+  public renderQueue: Chunk[] = [];
+  // Optimal loadArea = 4
   constructor(seed: number, loadArea = 4) {
     // If The Seed is 0 then we are using a flat world
     this.seed = seed;
@@ -70,33 +71,39 @@ class World {
     if (this.chunks[x][y] == undefined) this.chunks[x][y] = {};
     this.chunks[x][y][z] = chunk;
   }
-  private getChunk(x: number, y: number, z: number) {
+  public getChunk(x: number, y: number, z: number): Chunk {
     if (this.chunks[x] == undefined) this.chunks[x] = {};
     if (this.chunks[x][y] == undefined) this.chunks[x][y] = {};
-    return this.chunks[x][y][z];
+    const chunk = this.chunks[x][y][z];
+    if (chunk == undefined) {
+      return this.generateChunk(x, y, z);
+    }
+    return chunk;
   }
   // Generate World
   private generateChunk(x: number, y: number, z: number) {
     // TODO: Implement This
+    const chunkSize = this.chunkSize;
+    const worldX = x * chunkSize;
+    const worldY = y * chunkSize;
+    const worldZ = z * chunkSize;
     // Create A New Chunk
-    const chunk = new Chunk(
-      this.chunkSize,
-      x * this.chunkSize,
-      y * this.chunkSize,
-      z * this.chunkSize
-    );
+    const chunk = new Chunk(this.chunkSize, worldX, worldY, worldZ);
     // TODO: Set The Terrain
     // If The Seed is 0 then Generate Flat World
     if (this.seed == 0) {
-      for (let offsetX = 0; offsetX < this.chunkSize; offsetX++) {
-        for (let offsetY = 0; offsetY < this.chunkSize; offsetY++) {
-          for (let offsetZ = 0; offsetZ < this.chunkSize; offsetZ++) {
+      let offsetX = 0,
+        offsetY = 0,
+        offsetZ = 0;
+      for (offsetZ = 0; offsetZ < chunkSize; offsetZ++) {
+        for (offsetY = 0; offsetY < chunkSize; offsetY++) {
+          for (offsetX = 0; offsetX < chunkSize; offsetX++) {
             // Calculate world Cords
-            const blockX = offsetX + x * this.chunkSize;
-            const blockY = offsetY + y * this.chunkSize;
-            const blockZ = offsetZ + z * this.chunkSize;
+            const blockX = offsetX + worldX;
+            const blockY = offsetY + worldY;
+            const blockZ = offsetZ + worldZ;
             // Conditions For Flat World
-            if (blockY <= 1) {
+            if (blockY < 1) {
               chunk.setBlock(
                 offsetX,
                 offsetY,
@@ -146,13 +153,22 @@ class World {
             playerPosition.y,
             playerPosition.z
           ).add(x, y, z);
-          const chunk =
-            this.getChunk(chunkPosition.x, chunkPosition.y, chunkPosition.z) ??
-            this.generateChunk(chunkPosition.x, chunkPosition.y, chunkPosition.z);
+          const chunk = this.getChunk(chunkPosition.x, chunkPosition.y, chunkPosition.z);
           // Render The Chunks
-          renderChunks.push(chunk.render(renderer));
+          const chunkMesh = chunk.getMesh();
+          if (chunkMesh === undefined) {
+            this.renderQueue.push(chunk);
+          } else {
+            renderChunks.push(chunkMesh);
+          }
         }
       }
+    }
+    // Render Five Chunks From The Queue
+    for (let i = 0; i < 5; i++) {
+      const chunk = this.renderQueue.pop();
+      if (chunk == undefined) break;
+      chunk.render(this, renderer.gl);
     }
     // Return Mesh
     return renderChunks;

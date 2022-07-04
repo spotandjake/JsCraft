@@ -16,3 +16,5 @@ export const enum BlockType {
   Air,
   Grass,
 }
+export type BlockTexture = [number, number, number, number];
+export type BlockColor = [number, number, number, number];

@@ -39,10 +39,12 @@ class Renderer {
   private modelMatrix: mat4;
   // Textures
   private whiteTexture: WebGLTexture;
+  private terrainTexture: WebGLTexture;
   // Constructor
   constructor(
     textCanvas: HTMLCanvasElement,
     gameCanvas: HTMLCanvasElement,
+    terrainTexture: HTMLImageElement,
     width: number,
     height: number
   ) {
@@ -90,6 +92,14 @@ class Renderer {
     const modelMatrix = (this.modelMatrix = mat4.create());
     mat4.identity(modelMatrix);
     gl.uniformMatrix4fv(this.uModelMat, false, modelMatrix);
+    // Load The Texture Atlas
+    this.terrainTexture = gl.createTexture()!;
+    terrainTexture.onload = () => {
+      gl.bindTexture(gl.TEXTURE_2D, this.terrainTexture);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, terrainTexture);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    };
     // Create 1px white texture for pure vertex color operations (e.g. picking)
     const whiteTexture = (this.whiteTexture = gl.createTexture()!);
     gl.activeTexture(gl.TEXTURE0);
