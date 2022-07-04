@@ -1,5 +1,4 @@
 import { clamp } from './Utils';
-import Vector from './Vector';
 // Handles Inputs
 class Controller {
   // General Keys
@@ -54,7 +53,7 @@ class Controller {
     return this.keys.get('Space') == true;
   }
   public get crouchButton() {
-    return this.keys.get('ShiftLeft') == true;
+    return this.keys.get('KeyQ') == true;
   }
 }
 // Export Controller

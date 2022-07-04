@@ -1,5 +1,5 @@
 import { BlockType, BlockDirection } from '../Types';
-import { pushQuad } from '../Utils';
+import getBlockData from './Blocks/index';
 // Block Constructor
 class Block {
   // Properties
@@ -16,67 +16,11 @@ class Block {
     this.blockType = blockType;
   }
   public render(side: BlockDirection, outMesh: number[] = []): number[] {
-    if (this.blockType === BlockType.Air) return [];
-    const { x, y, z } = this;
-    // Return The Different Side Meshes
-    // TODO: Bind this to block data
-    const color = {
-      r: 0,
-      g: 1,
-      b: 0,
-      a: 1,
-    };
-    // TODO: Bind this to block data
-    switch (side) {
-      case BlockDirection.Down:
-        return pushQuad(
-          outMesh,
-          [x, y, z, 0, 0, color.r, color.g, color.b, color.a],
-          [x + 1, y, z, 1, 0, color.r, color.g, color.b, color.a],
-          [x + 1, y, z + 1, 1, 1, color.r, color.g, color.b, color.a],
-          [x, y, z + 1, 0, 0, color.r, color.g, color.b, color.a]
-        );
-      case BlockDirection.Up:
-        return pushQuad(
-          outMesh,
-          [x, y + 1, z + 1, 0, 0, color.r, color.g, color.b, color.a],
-          [x + 1, y + 1, z + 1, 1, 0, color.r, color.g, color.b, color.a],
-          [x + 1, y + 1, z, 1, 1, color.r, color.g, color.b, color.a],
-          [x, y + 1, z, 0, 0, color.r, color.g, color.b, color.a]
-        );
-      case BlockDirection.North:
-        return pushQuad(
-          outMesh,
-          [x, y + 1, z, 0, 0, color.r, color.g, color.b, color.a],
-          [x + 1, y + 1, z, 1, 0, color.r, color.g, color.b, color.a],
-          [x + 1, y, z, 1, 1, color.r, color.g, color.b, color.a],
-          [x, y, z, 0, 0, color.r, color.g, color.b, color.a]
-        );
-      case BlockDirection.South:
-        return pushQuad(
-          outMesh,
-          [x, y, z + 1, 0, 0, color.r, color.g, color.b, color.a],
-          [x + 1, y, z + 1, 1, 0, color.r, color.g, color.b, color.a],
-          [x + 1, y + 1, z + 1, 1, 1, color.r, color.g, color.b, color.a],
-          [x, y + 1, z + 1, 0, 0, color.r, color.g, color.b, color.a]
-        );
-      case BlockDirection.East:
-        return pushQuad(
-          outMesh,
-          [x + 1, y, z, 0, 0, color.r, color.g, color.b, color.a],
-          [x + 1, y + 1, z, 1, 0, color.r, color.g, color.b, color.a],
-          [x + 1, y + 1, z + 1, 1, 1, color.r, color.g, color.b, color.a],
-          [x + 1, y, z + 1, 0, 0, color.r, color.g, color.b, color.a]
-        );
-      case BlockDirection.West:
-        return pushQuad(
-          outMesh,
-          [x, y, z + 1, 0, 0, color.r, color.g, color.b, color.a],
-          [x, y + 1, z + 1, 1, 0, color.r, color.g, color.b, color.a],
-          [x, y + 1, z, 1, 1, color.r, color.g, color.b, color.a],
-          [x, y, z, 0, 0, color.r, color.g, color.b, color.a]
-        );
-    }
+    // Render Block
+    const blockData = getBlockData(this.blockType);
+    if (blockData == undefined) return [];
+    const texture = blockData.texture(side);
+    return blockData.mesh(outMesh, side, texture, this.x, this.y, this.z, [1, 1, 1, 1]);
   }
 }
 export default Block;
