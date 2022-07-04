@@ -86,7 +86,7 @@ class Renderer {
     this.projMatrix = mat4.create();
     this.viewMatrix = mat4.create();
     // Setup Perspective
-    this.setPerspective(60, 0.1, 100);
+    this.setPerspective(60, 0.1, 10000);
     // TODO: Figure out if we need this
     // Create dummy model matrix
     const modelMatrix = (this.modelMatrix = mat4.create());

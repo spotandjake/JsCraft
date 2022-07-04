@@ -75,7 +75,7 @@ class World {
     if (this.chunks[x] == undefined) this.chunks[x] = {};
     if (this.chunks[x][y] == undefined) this.chunks[x][y] = {};
     const chunk = this.chunks[x][y][z];
-    if (chunk == undefined) {
+    if (chunk === undefined) {
       return this.generateChunk(x, y, z);
     }
     return chunk;
