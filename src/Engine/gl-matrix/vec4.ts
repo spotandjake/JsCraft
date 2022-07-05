@@ -1,4 +1,4 @@
-import * as glMatrix from './common.js';
+import * as glMatrix from './common';
 /**
  * 4 Dimensional Vector
  * @module vec4
@@ -11,9 +11,9 @@ import * as glMatrix from './common.js';
  */
 
 export function create() {
-  var out = new glMatrix.ARRAY_TYPE(4);
+  const out = glMatrix.ARRAY_TYPE(4);
 
-  if (glMatrix.ARRAY_TYPE != Float32Array) {
+  if (!(out instanceof Float32Array)) {
     out[0] = 0;
     out[1] = 0;
     out[2] = 0;
@@ -30,7 +30,7 @@ export function create() {
  */
 
 export function clone(a) {
-  var out = new glMatrix.ARRAY_TYPE(4);
+  const out = glMatrix.ARRAY_TYPE(4);
   out[0] = a[0];
   out[1] = a[1];
   out[2] = a[2];
@@ -48,7 +48,7 @@ export function clone(a) {
  */
 
 export function fromValues(x, y, z, w) {
-  var out = new glMatrix.ARRAY_TYPE(4);
+  const out = glMatrix.ARRAY_TYPE(4);
   out[0] = x;
   out[1] = y;
   out[2] = z;
