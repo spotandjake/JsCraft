@@ -1,7 +1,7 @@
 import loadVertexShader from '../Shaders/VertexShader.glsl';
 import loadFragmentShader from '../Shaders/FragmentShader.glsl';
 import { mat4 } from './gl-matrix/index.js';
-import { Mesh } from './Types';
+import type { Mesh } from './Types';
 import { radiansToDegrees } from './Utils';
 import Vector from './Vector.js';
 // Types

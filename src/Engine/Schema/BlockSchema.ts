@@ -1,4 +1,4 @@
-import { BlockType, BlockDirection, BlockTexture, BlockColor } from '../Types';
+import type { BlockType, BlockDirection, BlockTexture, BlockColor } from '../Types';
 // BlockSchema
 interface BlockSchema {
   blockType: BlockType;

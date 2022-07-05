@@ -1,4 +1,5 @@
-import { BlockType, BlockDirection, BlockTexture, BlockColor } from '../../Types';
+import { BlockType, BlockDirection } from '../../Types';
+import type { BlockTexture, BlockColor } from '../../Types';
 import { pushQuad } from '../../Utils';
 export default {
   blockType: BlockType.Grass,

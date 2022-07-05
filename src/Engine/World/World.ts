@@ -1,8 +1,9 @@
 import Chunk from './Chunk';
 import Block from './Block';
-import { Mesh, BlockType } from '../Types';
+import { BlockType } from '../Types';
+import type { Mesh } from '../Types';
 import Vector from '../Vector';
-import Renderer from '../Renderer';
+import type Renderer from '../Renderer';
 interface InternalWorldChunks {
   [key: number]: {
     [key: number]: {
@@ -19,7 +20,7 @@ class World {
   private renderDistance: number;
   public renderQueue: Chunk[] = [];
   // Optimal loadArea = 4
-  constructor(seed: number, loadArea = 4) {
+  constructor(seed: number, loadArea = 5) {
     // If The Seed is 0 then we are using a flat world
     this.seed = seed;
     this.renderDistance = loadArea;

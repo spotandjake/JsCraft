@@ -1,4 +1,4 @@
-import { BlockType, BlockDirection } from '../Types';
+import type { BlockType, BlockDirection } from '../Types';
 import getBlockData from './Blocks/index';
 // Block Constructor
 class Block {

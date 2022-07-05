@@ -1,5 +1,5 @@
 import { BlockType } from '../../Types';
-import BlockSchema from '../../Schema/BlockSchema';
+import type BlockSchema from '../../Schema/BlockSchema';
 // Block Imports
 import GrassBlock from './GrassBlock';
 // Block Map

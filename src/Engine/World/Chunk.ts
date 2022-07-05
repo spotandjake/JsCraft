@@ -1,6 +1,7 @@
 import Block from './Block';
-import World from './World';
-import { Mesh, BlockType, BlockDirection } from '../Types';
+import type World from './World';
+import { BlockType, BlockDirection } from '../Types';
+import type { Mesh } from '../Types';
 class Chunk {
   private blocks: Block[];
   private size: number;

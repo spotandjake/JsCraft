@@ -1,6 +1,6 @@
-import * as glMatrix from './common.js';
-import * as quat from './quat.js';
-import * as mat4 from './mat4.js';
+import * as glMatrix from './common';
+import * as quat from './quat';
+import * as mat4 from './mat4';
 /**
  * Dual Quaternion<br>
  * Format: [real, dual]<br>
@@ -16,9 +16,9 @@ import * as mat4 from './mat4.js';
  */
 
 export function create() {
-  var dq = new glMatrix.ARRAY_TYPE(8);
+  const dq = glMatrix.ARRAY_TYPE(8);
 
-  if (glMatrix.ARRAY_TYPE != Float32Array) {
+  if (!(dq instanceof Float32Array)) {
     dq[0] = 0;
     dq[1] = 0;
     dq[2] = 0;
@@ -40,7 +40,7 @@ export function create() {
  */
 
 export function clone(a) {
-  var dq = new glMatrix.ARRAY_TYPE(8);
+  const dq = glMatrix.ARRAY_TYPE(8);
   dq[0] = a[0];
   dq[1] = a[1];
   dq[2] = a[2];
@@ -67,7 +67,7 @@ export function clone(a) {
  */
 
 export function fromValues(x1, y1, z1, w1, x2, y2, z2, w2) {
-  var dq = new glMatrix.ARRAY_TYPE(8);
+  const dq = glMatrix.ARRAY_TYPE(8);
   dq[0] = x1;
   dq[1] = y1;
   dq[2] = z1;
@@ -93,12 +93,12 @@ export function fromValues(x1, y1, z1, w1, x2, y2, z2, w2) {
  */
 
 export function fromRotationTranslationValues(x1, y1, z1, w1, x2, y2, z2) {
-  var dq = new glMatrix.ARRAY_TYPE(8);
+  const dq = glMatrix.ARRAY_TYPE(8);
   dq[0] = x1;
   dq[1] = y1;
   dq[2] = z1;
   dq[3] = w1;
-  var ax = x2 * 0.5,
+  const ax = x2 * 0.5,
     ay = y2 * 0.5,
     az = z2 * 0.5;
   dq[4] = ax * w1 + ay * z1 - az * y1;
@@ -118,7 +118,7 @@ export function fromRotationTranslationValues(x1, y1, z1, w1, x2, y2, z2) {
  */
 
 export function fromRotationTranslation(out, q, t) {
-  var ax = t[0] * 0.5,
+  const ax = t[0] * 0.5,
     ay = t[1] * 0.5,
     az = t[2] * 0.5,
     bx = q[0],
@@ -186,9 +186,9 @@ export function fromRotation(out, q) {
 
 export function fromMat4(out, a) {
   //TODO Optimize this
-  var outer = quat.create();
+  const outer = quat.create();
   mat4.getRotation(outer, a);
-  var t = new glMatrix.ARRAY_TYPE(3);
+  const t = glMatrix.ARRAY_TYPE(3);
   mat4.getTranslation(t, a);
   fromRotationTranslation(out, outer, t);
   return out;
@@ -314,7 +314,7 @@ export function setDual(out, q) {
  */
 
 export function getTranslation(out, a) {
-  var ax = a[4],
+  const ax = a[4],
     ay = a[5],
     az = a[6],
     aw = a[7],
@@ -337,7 +337,7 @@ export function getTranslation(out, a) {
  */
 
 export function translate(out, a, v) {
-  var ax1 = a[0],
+  const ax1 = a[0],
     ay1 = a[1],
     az1 = a[2],
     aw1 = a[3],
@@ -368,11 +368,11 @@ export function translate(out, a, v) {
  */
 
 export function rotateX(out, a, rad) {
-  var bx = -a[0],
+  let bx = -a[0],
     by = -a[1],
     bz = -a[2],
-    bw = a[3],
-    ax = a[4],
+    bw = a[3];
+  const ax = a[4],
     ay = a[5],
     az = a[6],
     aw = a[7],
@@ -401,11 +401,11 @@ export function rotateX(out, a, rad) {
  */
 
 export function rotateY(out, a, rad) {
-  var bx = -a[0],
+  let bx = -a[0],
     by = -a[1],
     bz = -a[2],
-    bw = a[3],
-    ax = a[4],
+    bw = a[3];
+  const ax = a[4],
     ay = a[5],
     az = a[6],
     aw = a[7],
@@ -434,11 +434,11 @@ export function rotateY(out, a, rad) {
  */
 
 export function rotateZ(out, a, rad) {
-  var bx = -a[0],
+  let bx = -a[0],
     by = -a[1],
     bz = -a[2],
-    bw = a[3],
-    ax = a[4],
+    bw = a[3];
+  const ax = a[4],
     ay = a[5],
     az = a[6],
     aw = a[7],
@@ -467,11 +467,11 @@ export function rotateZ(out, a, rad) {
  */
 
 export function rotateByQuatAppend(out, a, q) {
-  var qx = q[0],
+  const qx = q[0],
     qy = q[1],
     qz = q[2],
-    qw = q[3],
-    ax = a[0],
+    qw = q[3];
+  let ax = a[0],
     ay = a[1],
     az = a[2],
     aw = a[3];
@@ -499,7 +499,7 @@ export function rotateByQuatAppend(out, a, q) {
  */
 
 export function rotateByQuatPrepend(out, q, a) {
-  var qx = q[0],
+  const qx = q[0],
     qy = q[1],
     qz = q[2],
     qw = q[3],
@@ -537,14 +537,14 @@ export function rotateAroundAxis(out, a, axis, rad) {
     return copy(out, a);
   }
 
-  var axisLength = Math.hypot(axis[0], axis[1], axis[2]);
+  const axisLength = Math.hypot(axis[0], axis[1], axis[2]);
   rad = rad * 0.5;
-  var s = Math.sin(rad);
-  var bx = (s * axis[0]) / axisLength;
-  var by = (s * axis[1]) / axisLength;
-  var bz = (s * axis[2]) / axisLength;
-  var bw = Math.cos(rad);
-  var ax1 = a[0],
+  const s = Math.sin(rad);
+  const bx = (s * axis[0]) / axisLength;
+  const by = (s * axis[1]) / axisLength;
+  const bz = (s * axis[2]) / axisLength;
+  const bw = Math.cos(rad);
+  const ax1 = a[0],
     ay1 = a[1],
     az1 = a[2],
     aw1 = a[3];
@@ -552,7 +552,7 @@ export function rotateAroundAxis(out, a, axis, rad) {
   out[1] = ay1 * bw + aw1 * by + az1 * bx - ax1 * bz;
   out[2] = az1 * bw + aw1 * bz + ax1 * by - ay1 * bx;
   out[3] = aw1 * bw - ax1 * bx - ay1 * by - az1 * bz;
-  var ax = a[4],
+  const ax = a[4],
     ay = a[5],
     az = a[6],
     aw = a[7];
@@ -593,7 +593,7 @@ export function add(out, a, b) {
  */
 
 export function multiply(out, a, b) {
-  var ax0 = a[0],
+  const ax0 = a[0],
     ay0 = a[1],
     az0 = a[2],
     aw0 = a[3],
@@ -628,7 +628,7 @@ export function multiply(out, a, b) {
  * @function
  */
 
-export var mul = multiply;
+export const mul = multiply;
 /**
  * Scales a dual quat by a scalar number
  *
@@ -659,7 +659,7 @@ export function scale(out, a, b) {
  * @function
  */
 
-export var dot = quat.dot;
+export const dot = quat.dot;
 /**
  * Performs a linear interpolation between two dual quats's
  * NOTE: The resulting dual quaternions won't always be normalized (The error is most noticeable when t = 0.5)
@@ -672,7 +672,7 @@ export var dot = quat.dot;
  */
 
 export function lerp(out, a, b, t) {
-  var mt = 1 - t;
+  const mt = 1 - t;
   if (dot(a, b) < 0) t = -t;
   out[0] = a[0] * mt + b[0] * t;
   out[1] = a[1] * mt + b[1] * t;
@@ -693,7 +693,7 @@ export function lerp(out, a, b, t) {
  */
 
 export function invert(out, a) {
-  var sqlen = squaredLength(a);
+  const sqlen = squaredLength(a);
   out[0] = -a[0] / sqlen;
   out[1] = -a[1] / sqlen;
   out[2] = -a[2] / sqlen;
@@ -732,13 +732,13 @@ export function conjugate(out, a) {
  * @function
  */
 
-export var length = quat.length;
+export const length = quat.length;
 /**
  * Alias for {@link quat2.length}
  * @function
  */
 
-export var len = length;
+export const len = length;
 /**
  * Calculates the squared length of a dual quat
  *
@@ -747,13 +747,13 @@ export var len = length;
  * @function
  */
 
-export var squaredLength = quat.squaredLength;
+export const squaredLength = quat.squaredLength;
 /**
  * Alias for {@link quat2.squaredLength}
  * @function
  */
 
-export var sqrLen = squaredLength;
+export const sqrLen = squaredLength;
 /**
  * Normalize a dual quat
  *
@@ -764,19 +764,19 @@ export var sqrLen = squaredLength;
  */
 
 export function normalize(out, a) {
-  var magnitude = squaredLength(a);
+  let magnitude = squaredLength(a);
 
   if (magnitude > 0) {
     magnitude = Math.sqrt(magnitude);
-    var a0 = a[0] / magnitude;
-    var a1 = a[1] / magnitude;
-    var a2 = a[2] / magnitude;
-    var a3 = a[3] / magnitude;
-    var b0 = a[4];
-    var b1 = a[5];
-    var b2 = a[6];
-    var b3 = a[7];
-    var a_dot_b = a0 * b0 + a1 * b1 + a2 * b2 + a3 * b3;
+    const a0 = a[0] / magnitude;
+    const a1 = a[1] / magnitude;
+    const a2 = a[2] / magnitude;
+    const a3 = a[3] / magnitude;
+    const b0 = a[4];
+    const b1 = a[5];
+    const b2 = a[6];
+    const b3 = a[7];
+    const a_dot_b = a0 * b0 + a1 * b1 + a2 * b2 + a3 * b3;
     out[0] = a0;
     out[1] = a1;
     out[2] = a2;
@@ -797,25 +797,7 @@ export function normalize(out, a) {
  */
 
 export function str(a) {
-  return (
-    'quat2(' +
-    a[0] +
-    ', ' +
-    a[1] +
-    ', ' +
-    a[2] +
-    ', ' +
-    a[3] +
-    ', ' +
-    a[4] +
-    ', ' +
-    a[5] +
-    ', ' +
-    a[6] +
-    ', ' +
-    a[7] +
-    ')'
-  );
+  return `quat2(${a[0]}, ${a[1]}, ${a[2]}, ${a[3]}, ${a[4]}, ${a[5]}, ${a[6]}, ${a[7]})`;
 }
 /**
  * Returns whether or not the dual quaternions have exactly the same elements in the same position (when compared with ===)
@@ -846,7 +828,7 @@ export function exactEquals(a, b) {
  */
 
 export function equals(a, b) {
-  var a0 = a[0],
+  const a0 = a[0],
     a1 = a[1],
     a2 = a[2],
     a3 = a[3],
@@ -854,7 +836,7 @@ export function equals(a, b) {
     a5 = a[5],
     a6 = a[6],
     a7 = a[7];
-  var b0 = b[0],
+  const b0 = b[0],
     b1 = b[1],
     b2 = b[2],
     b3 = b[3],

@@ -1,4 +1,5 @@
-import * as glMatrix from './common.js';
+import * as glMatrix from './common';
+import type { ReadonlyMat2d, mat2d, ReadonlyVec2 } from './Types';
 /**
  * 2x3 Matrix
  * @module mat2d
@@ -24,10 +25,10 @@ import * as glMatrix from './common.js';
  * @returns {mat2d} a new 2x3 matrix
  */
 
-export function create() {
-  var out = new glMatrix.ARRAY_TYPE(6);
+export function create(): mat2d {
+  const out = <mat2d>glMatrix.ARRAY_TYPE(6);
 
-  if (glMatrix.ARRAY_TYPE != Float32Array) {
+  if (!(out instanceof Float32Array)) {
     out[1] = 0;
     out[2] = 0;
     out[4] = 0;
@@ -45,8 +46,8 @@ export function create() {
  * @returns {mat2d} a new 2x3 matrix
  */
 
-export function clone(a) {
-  var out = new glMatrix.ARRAY_TYPE(6);
+export function clone(a: ReadonlyMat2d): mat2d {
+  const out = <mat2d>glMatrix.ARRAY_TYPE(6);
   out[0] = a[0];
   out[1] = a[1];
   out[2] = a[2];
@@ -63,7 +64,7 @@ export function clone(a) {
  * @returns {mat2d} out
  */
 
-export function copy(out, a) {
+export function copy(out: mat2d, a: ReadonlyMat2d): mat2d {
   out[0] = a[0];
   out[1] = a[1];
   out[2] = a[2];
@@ -79,7 +80,7 @@ export function copy(out, a) {
  * @returns {mat2d} out
  */
 
-export function identity(out) {
+export function identity(out: mat2d): mat2d {
   out[0] = 1;
   out[1] = 0;
   out[2] = 0;
@@ -100,8 +101,15 @@ export function identity(out) {
  * @returns {mat2d} A new mat2d
  */
 
-export function fromValues(a, b, c, d, tx, ty) {
-  var out = new glMatrix.ARRAY_TYPE(6);
+export function fromValues(
+  a: number,
+  b: number,
+  c: number,
+  d: number,
+  tx: number,
+  ty: number
+): mat2d {
+  const out = <mat2d>glMatrix.ARRAY_TYPE(6);
   out[0] = a;
   out[1] = b;
   out[2] = c;
@@ -123,7 +131,15 @@ export function fromValues(a, b, c, d, tx, ty) {
  * @returns {mat2d} out
  */
 
-export function set(out, a, b, c, d, tx, ty) {
+export function set(
+  out: mat2d,
+  a: number,
+  b: number,
+  c: number,
+  d: number,
+  tx: number,
+  ty: number
+): mat2d {
   out[0] = a;
   out[1] = b;
   out[2] = c;
@@ -140,17 +156,17 @@ export function set(out, a, b, c, d, tx, ty) {
  * @returns {mat2d} out
  */
 
-export function invert(out, a) {
-  var aa = a[0],
+export function invert(out: mat2d, a: ReadonlyMat2d): mat2d {
+  const aa = a[0],
     ab = a[1],
     ac = a[2],
     ad = a[3];
-  var atx = a[4],
+  const atx = a[4],
     aty = a[5];
-  var det = aa * ad - ab * ac;
+  let det = aa * ad - ab * ac;
 
   if (!det) {
-    return null;
+    return out;
   }
 
   det = 1.0 / det;
@@ -169,7 +185,7 @@ export function invert(out, a) {
  * @returns {Number} determinant of a
  */
 
-export function determinant(a) {
+export function determinant(a: ReadonlyMat2d): number {
   return a[0] * a[3] - a[1] * a[2];
 }
 /**
@@ -181,14 +197,14 @@ export function determinant(a) {
  * @returns {mat2d} out
  */
 
-export function multiply(out, a, b) {
-  var a0 = a[0],
+export function multiply(out: mat2d, a: ReadonlyMat2d, b: ReadonlyMat2d): mat2d {
+  const a0 = a[0],
     a1 = a[1],
     a2 = a[2],
     a3 = a[3],
     a4 = a[4],
     a5 = a[5];
-  var b0 = b[0],
+  const b0 = b[0],
     b1 = b[1],
     b2 = b[2],
     b3 = b[3],
@@ -211,15 +227,15 @@ export function multiply(out, a, b) {
  * @returns {mat2d} out
  */
 
-export function rotate(out, a, rad) {
-  var a0 = a[0],
+export function rotate(out: mat2d, a: ReadonlyMat2d, rad: number): mat2d {
+  const a0 = a[0],
     a1 = a[1],
     a2 = a[2],
     a3 = a[3],
     a4 = a[4],
     a5 = a[5];
-  var s = Math.sin(rad);
-  var c = Math.cos(rad);
+  const s = Math.sin(rad);
+  const c = Math.cos(rad);
   out[0] = a0 * c + a2 * s;
   out[1] = a1 * c + a3 * s;
   out[2] = a0 * -s + a2 * c;
@@ -237,14 +253,14 @@ export function rotate(out, a, rad) {
  * @returns {mat2d} out
  **/
 
-export function scale(out, a, v) {
-  var a0 = a[0],
+export function scale(out: mat2d, a: ReadonlyMat2d, v: ReadonlyVec2): mat2d {
+  const a0 = a[0],
     a1 = a[1],
     a2 = a[2],
     a3 = a[3],
     a4 = a[4],
     a5 = a[5];
-  var v0 = v[0],
+  const v0 = v[0],
     v1 = v[1];
   out[0] = a0 * v0;
   out[1] = a1 * v0;
@@ -263,14 +279,14 @@ export function scale(out, a, v) {
  * @returns {mat2d} out
  **/
 
-export function translate(out, a, v) {
-  var a0 = a[0],
+export function translate(out: mat2d, a: ReadonlyMat2d, v: ReadonlyVec2): mat2d {
+  const a0 = a[0],
     a1 = a[1],
     a2 = a[2],
     a3 = a[3],
     a4 = a[4],
     a5 = a[5];
-  var v0 = v[0],
+  const v0 = v[0],
     v1 = v[1];
   out[0] = a0;
   out[1] = a1;
@@ -292,8 +308,8 @@ export function translate(out, a, v) {
  * @returns {mat2d} out
  */
 
-export function fromRotation(out, rad) {
-  var s = Math.sin(rad),
+export function fromRotation(out: mat2d, rad: number): mat2d {
+  const s = Math.sin(rad),
     c = Math.cos(rad);
   out[0] = c;
   out[1] = s;
@@ -315,7 +331,7 @@ export function fromRotation(out, rad) {
  * @returns {mat2d} out
  */
 
-export function fromScaling(out, v) {
+export function fromScaling(out: mat2d, v: ReadonlyVec2): mat2d {
   out[0] = v[0];
   out[1] = 0;
   out[2] = 0;
@@ -336,7 +352,7 @@ export function fromScaling(out, v) {
  * @returns {mat2d} out
  */
 
-export function fromTranslation(out, v) {
+export function fromTranslation(out: mat2d, v: ReadonlyVec2): mat2d {
   out[0] = 1;
   out[1] = 0;
   out[2] = 0;
@@ -352,10 +368,8 @@ export function fromTranslation(out, v) {
  * @returns {String} string representation of the matrix
  */
 
-export function str(a) {
-  return (
-    'mat2d(' + a[0] + ', ' + a[1] + ', ' + a[2] + ', ' + a[3] + ', ' + a[4] + ', ' + a[5] + ')'
-  );
+export function str(a: ReadonlyMat2d): string {
+  return `mat2d(${a[0]}, ${a[1]}, ${a[2]}, ${a[3]}, ${a[4]}, ${a[5]})`;
 }
 /**
  * Returns Frobenius norm of a mat2d
@@ -364,7 +378,7 @@ export function str(a) {
  * @returns {Number} Frobenius norm
  */
 
-export function frob(a) {
+export function frob(a: ReadonlyMat2d): number {
   return Math.hypot(a[0], a[1], a[2], a[3], a[4], a[5], 1);
 }
 /**
@@ -376,7 +390,7 @@ export function frob(a) {
  * @returns {mat2d} out
  */
 
-export function add(out, a, b) {
+export function add(out: mat2d, a: ReadonlyMat2d, b: ReadonlyMat2d): mat2d {
   out[0] = a[0] + b[0];
   out[1] = a[1] + b[1];
   out[2] = a[2] + b[2];
@@ -394,7 +408,7 @@ export function add(out, a, b) {
  * @returns {mat2d} out
  */
 
-export function subtract(out, a, b) {
+export function subtract(out: mat2d, a: ReadonlyMat2d, b: ReadonlyMat2d): mat2d {
   out[0] = a[0] - b[0];
   out[1] = a[1] - b[1];
   out[2] = a[2] - b[2];
@@ -412,7 +426,7 @@ export function subtract(out, a, b) {
  * @returns {mat2d} out
  */
 
-export function multiplyScalar(out, a, b) {
+export function multiplyScalar(out: mat2d, a: ReadonlyMat2d, b: number): mat2d {
   out[0] = a[0] * b;
   out[1] = a[1] * b;
   out[2] = a[2] * b;
@@ -431,7 +445,12 @@ export function multiplyScalar(out, a, b) {
  * @returns {mat2d} out
  */
 
-export function multiplyScalarAndAdd(out, a, b, scale) {
+export function multiplyScalarAndAdd(
+  out: mat2d,
+  a: ReadonlyMat2d,
+  b: ReadonlyMat2d,
+  scale: number
+): mat2d {
   out[0] = a[0] + b[0] * scale;
   out[1] = a[1] + b[1] * scale;
   out[2] = a[2] + b[2] * scale;
@@ -448,7 +467,7 @@ export function multiplyScalarAndAdd(out, a, b, scale) {
  * @returns {Boolean} True if the matrices are equal, false otherwise.
  */
 
-export function exactEquals(a, b) {
+export function exactEquals(a: ReadonlyMat2d, b: ReadonlyMat2d): boolean {
   return (
     a[0] === b[0] &&
     a[1] === b[1] &&
@@ -466,14 +485,14 @@ export function exactEquals(a, b) {
  * @returns {Boolean} True if the matrices are equal, false otherwise.
  */
 
-export function equals(a, b) {
-  var a0 = a[0],
+export function equals(a: ReadonlyMat2d, b: ReadonlyMat2d): boolean {
+  const a0 = a[0],
     a1 = a[1],
     a2 = a[2],
     a3 = a[3],
     a4 = a[4],
     a5 = a[5];
-  var b0 = b[0],
+  const b0 = b[0],
     b1 = b[1],
     b2 = b[2],
     b3 = b[3],
@@ -493,10 +512,10 @@ export function equals(a, b) {
  * @function
  */
 
-export var mul = multiply;
+export const mul = multiply;
 /**
  * Alias for {@link mat2d.subtract}
  * @function
  */
 
-export var sub = subtract;
+export const sub = subtract;

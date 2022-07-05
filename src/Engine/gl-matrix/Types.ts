@@ -1,45 +1,45 @@
 // prettier-ignore
-declare type mat2 =
+export type mat2 =
   | [number, number, 
      number, number]
   | Float32Array;
 
 // prettier-ignore
-declare type mat2d =
+export type mat2d =
   | [number, number, 
      number, number, 
      number, number]
   | Float32Array;
 
 // prettier-ignore
-declare type mat3 =
+export type mat3 =
   | [number, number, number, 
      number, number, number, 
      number, number, number]
   | Float32Array;
 
 // prettier-ignore
-declare type mat4 =
+export type mat4 =
   | [number, number, number, number,
      number, number, number, number,
      number, number, number, number,
      number, number, number, number]
   | Float32Array;
 
-declare type quat = [number, number, number, number] | Float32Array;
+export type quat = [number, number, number, number] | Float32Array;
 
 // prettier-ignore
-declare type quat2 =
+export type quat2 =
   | [number, number, number, number, 
     number, number, number, number]
   | Float32Array;
 
-declare type vec2 = [number, number] | Float32Array;
-declare type vec3 = [number, number, number] | Float32Array;
-declare type vec4 = [number, number, number, number] | Float32Array;
+export type vec2 = [number, number] | Float32Array;
+export type vec3 = [number, number, number] | Float32Array;
+export type vec4 = [number, number, number, number] | Float32Array;
 
 // prettier-ignore
-declare type ReadonlyMat2 =
+export type ReadonlyMat2 =
   | readonly [
       number, number,
       number, number
@@ -47,7 +47,7 @@ declare type ReadonlyMat2 =
   | Float32Array;
 
 // prettier-ignore
-declare type ReadonlyMat2d =
+export type ReadonlyMat2d =
   | readonly [
       number, number,
       number, number,
@@ -56,7 +56,7 @@ declare type ReadonlyMat2d =
   | Float32Array;
 
 // prettier-ignore
-declare type ReadonlyMat3 =
+export type ReadonlyMat3 =
   | readonly [
       number, number, number,
       number, number, number,
@@ -65,7 +65,7 @@ declare type ReadonlyMat3 =
   | Float32Array;
 
 // prettier-ignore
-declare type ReadonlyMat4 =
+export type ReadonlyMat4 =
   | readonly [
       number, number, number, number,
       number, number, number, number,
@@ -74,12 +74,12 @@ declare type ReadonlyMat4 =
     ]
   | Float32Array;
 
-declare type ReadonlyQuat = readonly [number, number, number, number] | Float32Array;
+export type ReadonlyQuat = readonly [number, number, number, number] | Float32Array;
 
-declare type ReadonlyQuat2 =
+export type ReadonlyQuat2 =
   | readonly [number, number, number, number, number, number, number, number]
   | Float32Array;
 
-declare type ReadonlyVec2 = readonly [number, number] | Float32Array;
-declare type ReadonlyVec3 = readonly [number, number, number] | Float32Array;
-declare type ReadonlyVec4 = readonly [number, number, number, number] | Float32Array;
+export type ReadonlyVec2 = readonly [number, number] | Float32Array;
+export type ReadonlyVec3 = readonly [number, number, number] | Float32Array;
+export type ReadonlyVec4 = readonly [number, number, number, number] | Float32Array;
