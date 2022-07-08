@@ -2,6 +2,7 @@ import type { BlockType, BlockDirection, BlockTexture, BlockColor } from '../Typ
 // BlockSchema
 interface BlockSchema {
   blockType: BlockType;
+  transparent: boolean;
   texture: (direction: BlockDirection) => BlockTexture;
   mesh: (
     out: number[],

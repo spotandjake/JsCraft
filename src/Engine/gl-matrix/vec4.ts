@@ -1,4 +1,5 @@
 import * as glMatrix from './common';
+import type { vec4, ReadonlyVec4, ReadonlyMat4, ReadonlyQuat } from './Types';
 /**
  * 4 Dimensional Vector
  * @module vec4
@@ -10,8 +11,8 @@ import * as glMatrix from './common';
  * @returns {vec4} a new 4D vector
  */
 
-export function create() {
-  const out = glMatrix.ARRAY_TYPE(4);
+export function create(): vec4 {
+  const out = <vec4>glMatrix.ARRAY_TYPE(4);
 
   if (!(out instanceof Float32Array)) {
     out[0] = 0;
@@ -29,8 +30,8 @@ export function create() {
  * @returns {vec4} a new 4D vector
  */
 
-export function clone(a) {
-  const out = glMatrix.ARRAY_TYPE(4);
+export function clone(a: ReadonlyVec4): vec4 {
+  const out = <vec4>glMatrix.ARRAY_TYPE(4);
   out[0] = a[0];
   out[1] = a[1];
   out[2] = a[2];
@@ -47,8 +48,8 @@ export function clone(a) {
  * @returns {vec4} a new 4D vector
  */
 
-export function fromValues(x, y, z, w) {
-  const out = glMatrix.ARRAY_TYPE(4);
+export function fromValues(x: number, y: number, z: number, w: number): vec4 {
+  const out = <vec4>glMatrix.ARRAY_TYPE(4);
   out[0] = x;
   out[1] = y;
   out[2] = z;
@@ -63,7 +64,7 @@ export function fromValues(x, y, z, w) {
  * @returns {vec4} out
  */
 
-export function copy(out, a) {
+export function copy(out: vec4, a: ReadonlyVec4): vec4 {
   out[0] = a[0];
   out[1] = a[1];
   out[2] = a[2];
@@ -81,7 +82,7 @@ export function copy(out, a) {
  * @returns {vec4} out
  */
 
-export function set(out, x, y, z, w) {
+export function set(out: vec4, x: number, y: number, z: number, w: number): vec4 {
   out[0] = x;
   out[1] = y;
   out[2] = z;
@@ -97,7 +98,7 @@ export function set(out, x, y, z, w) {
  * @returns {vec4} out
  */
 
-export function add(out, a, b) {
+export function add(out: vec4, a: ReadonlyVec4, b: ReadonlyVec4): vec4 {
   out[0] = a[0] + b[0];
   out[1] = a[1] + b[1];
   out[2] = a[2] + b[2];
@@ -113,7 +114,7 @@ export function add(out, a, b) {
  * @returns {vec4} out
  */
 
-export function subtract(out, a, b) {
+export function subtract(out: vec4, a: ReadonlyVec4, b: ReadonlyVec4): vec4 {
   out[0] = a[0] - b[0];
   out[1] = a[1] - b[1];
   out[2] = a[2] - b[2];
@@ -129,7 +130,7 @@ export function subtract(out, a, b) {
  * @returns {vec4} out
  */
 
-export function multiply(out, a, b) {
+export function multiply(out: vec4, a: ReadonlyVec4, b: ReadonlyVec4): vec4 {
   out[0] = a[0] * b[0];
   out[1] = a[1] * b[1];
   out[2] = a[2] * b[2];
@@ -145,7 +146,7 @@ export function multiply(out, a, b) {
  * @returns {vec4} out
  */
 
-export function divide(out, a, b) {
+export function divide(out: vec4, a: ReadonlyVec4, b: ReadonlyVec4): vec4 {
   out[0] = a[0] / b[0];
   out[1] = a[1] / b[1];
   out[2] = a[2] / b[2];
@@ -160,7 +161,7 @@ export function divide(out, a, b) {
  * @returns {vec4} out
  */
 
-export function ceil(out, a) {
+export function ceil(out: vec4, a: ReadonlyVec4): vec4 {
   out[0] = Math.ceil(a[0]);
   out[1] = Math.ceil(a[1]);
   out[2] = Math.ceil(a[2]);
@@ -175,7 +176,7 @@ export function ceil(out, a) {
  * @returns {vec4} out
  */
 
-export function floor(out, a) {
+export function floor(out: vec4, a: ReadonlyVec4): vec4 {
   out[0] = Math.floor(a[0]);
   out[1] = Math.floor(a[1]);
   out[2] = Math.floor(a[2]);
@@ -191,7 +192,7 @@ export function floor(out, a) {
  * @returns {vec4} out
  */
 
-export function min(out, a, b) {
+export function min(out: vec4, a: ReadonlyVec4, b: ReadonlyVec4): vec4 {
   out[0] = Math.min(a[0], b[0]);
   out[1] = Math.min(a[1], b[1]);
   out[2] = Math.min(a[2], b[2]);
@@ -207,7 +208,7 @@ export function min(out, a, b) {
  * @returns {vec4} out
  */
 
-export function max(out, a, b) {
+export function max(out: vec4, a: ReadonlyVec4, b: ReadonlyVec4): vec4 {
   out[0] = Math.max(a[0], b[0]);
   out[1] = Math.max(a[1], b[1]);
   out[2] = Math.max(a[2], b[2]);
@@ -222,7 +223,7 @@ export function max(out, a, b) {
  * @returns {vec4} out
  */
 
-export function round(out, a) {
+export function round(out: vec4, a: ReadonlyVec4): vec4 {
   out[0] = Math.round(a[0]);
   out[1] = Math.round(a[1]);
   out[2] = Math.round(a[2]);
@@ -238,7 +239,7 @@ export function round(out, a) {
  * @returns {vec4} out
  */
 
-export function scale(out, a, b) {
+export function scale(out: vec4, a: ReadonlyVec4, b: number): vec4 {
   out[0] = a[0] * b;
   out[1] = a[1] * b;
   out[2] = a[2] * b;
@@ -255,7 +256,7 @@ export function scale(out, a, b) {
  * @returns {vec4} out
  */
 
-export function scaleAndAdd(out, a, b, scale) {
+export function scaleAndAdd(out: vec4, a: ReadonlyVec4, b: ReadonlyVec4, scale: number): vec4 {
   out[0] = a[0] + b[0] * scale;
   out[1] = a[1] + b[1] * scale;
   out[2] = a[2] + b[2] * scale;
@@ -270,11 +271,11 @@ export function scaleAndAdd(out, a, b, scale) {
  * @returns {Number} distance between a and b
  */
 
-export function distance(a, b) {
-  var x = b[0] - a[0];
-  var y = b[1] - a[1];
-  var z = b[2] - a[2];
-  var w = b[3] - a[3];
+export function distance(a: ReadonlyVec4, b: ReadonlyVec4): number {
+  const x = b[0] - a[0];
+  const y = b[1] - a[1];
+  const z = b[2] - a[2];
+  const w = b[3] - a[3];
   return Math.hypot(x, y, z, w);
 }
 /**
@@ -285,11 +286,11 @@ export function distance(a, b) {
  * @returns {Number} squared distance between a and b
  */
 
-export function squaredDistance(a, b) {
-  var x = b[0] - a[0];
-  var y = b[1] - a[1];
-  var z = b[2] - a[2];
-  var w = b[3] - a[3];
+export function squaredDistance(a: ReadonlyVec4, b: ReadonlyVec4): number {
+  const x = b[0] - a[0];
+  const y = b[1] - a[1];
+  const z = b[2] - a[2];
+  const w = b[3] - a[3];
   return x * x + y * y + z * z + w * w;
 }
 /**
@@ -299,11 +300,11 @@ export function squaredDistance(a, b) {
  * @returns {Number} length of a
  */
 
-export function length(a) {
-  var x = a[0];
-  var y = a[1];
-  var z = a[2];
-  var w = a[3];
+export function length(a: ReadonlyVec4): number {
+  const x = a[0];
+  const y = a[1];
+  const z = a[2];
+  const w = a[3];
   return Math.hypot(x, y, z, w);
 }
 /**
@@ -313,11 +314,11 @@ export function length(a) {
  * @returns {Number} squared length of a
  */
 
-export function squaredLength(a) {
-  var x = a[0];
-  var y = a[1];
-  var z = a[2];
-  var w = a[3];
+export function squaredLength(a: ReadonlyVec4): number {
+  const x = a[0];
+  const y = a[1];
+  const z = a[2];
+  const w = a[3];
   return x * x + y * y + z * z + w * w;
 }
 /**
@@ -328,7 +329,7 @@ export function squaredLength(a) {
  * @returns {vec4} out
  */
 
-export function negate(out, a) {
+export function negate(out: vec4, a: ReadonlyVec4): vec4 {
   out[0] = -a[0];
   out[1] = -a[1];
   out[2] = -a[2];
@@ -343,7 +344,7 @@ export function negate(out, a) {
  * @returns {vec4} out
  */
 
-export function inverse(out, a) {
+export function inverse(out: vec4, a: ReadonlyVec4): vec4 {
   out[0] = 1.0 / a[0];
   out[1] = 1.0 / a[1];
   out[2] = 1.0 / a[2];
@@ -358,12 +359,12 @@ export function inverse(out, a) {
  * @returns {vec4} out
  */
 
-export function normalize(out, a) {
-  var x = a[0];
-  var y = a[1];
-  var z = a[2];
-  var w = a[3];
-  var len = x * x + y * y + z * z + w * w;
+export function normalize(out: vec4, a: ReadonlyVec4): vec4 {
+  const x = a[0];
+  const y = a[1];
+  const z = a[2];
+  const w = a[3];
+  let len = x * x + y * y + z * z + w * w;
 
   if (len > 0) {
     len = 1 / Math.sqrt(len);
@@ -383,30 +384,30 @@ export function normalize(out, a) {
  * @returns {Number} dot product of a and b
  */
 
-export function dot(a, b) {
+export function dot(a: ReadonlyVec4, b: ReadonlyVec4): number {
   return a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
 }
 /**
  * Returns the cross-product of three vectors in a 4-dimensional space
  *
- * @param {ReadonlyVec4} result the receiving vector
- * @param {ReadonlyVec4} U the first vector
- * @param {ReadonlyVec4} V the second vector
- * @param {ReadonlyVec4} W the third vector
+ * @param {vec4} out the receiving vector
+ * @param {ReadonlyVec4} u the first vector
+ * @param {ReadonlyVec4} v the second vector
+ * @param {ReadonlyVec4} w the third vector
  * @returns {vec4} result
  */
 
-export function cross(out, u, v, w) {
-  var A = v[0] * w[1] - v[1] * w[0],
+export function cross(out: vec4, u: ReadonlyVec4, v: ReadonlyVec4, w: ReadonlyVec4): vec4 {
+  const A = v[0] * w[1] - v[1] * w[0],
     B = v[0] * w[2] - v[2] * w[0],
     C = v[0] * w[3] - v[3] * w[0],
     D = v[1] * w[2] - v[2] * w[1],
     E = v[1] * w[3] - v[3] * w[1],
     F = v[2] * w[3] - v[3] * w[2];
-  var G = u[0];
-  var H = u[1];
-  var I = u[2];
-  var J = u[3];
+  const G = u[0];
+  const H = u[1];
+  const I = u[2];
+  const J = u[3];
   out[0] = H * F - I * E + J * D;
   out[1] = -(G * F) + I * C - J * B;
   out[2] = G * E - H * C + J * A;
@@ -423,11 +424,11 @@ export function cross(out, u, v, w) {
  * @returns {vec4} out
  */
 
-export function lerp(out, a, b, t) {
-  var ax = a[0];
-  var ay = a[1];
-  var az = a[2];
-  var aw = a[3];
+export function lerp(out: vec4, a: ReadonlyVec4, b: ReadonlyVec4, t: number): vec4 {
+  const ax = a[0];
+  const ay = a[1];
+  const az = a[2];
+  const aw = a[3];
   out[0] = ax + t * (b[0] - ax);
   out[1] = ay + t * (b[1] - ay);
   out[2] = az + t * (b[2] - az);
@@ -442,13 +443,13 @@ export function lerp(out, a, b, t) {
  * @returns {vec4} out
  */
 
-export function random(out, scale) {
+export function random(out: vec4, scale: number): vec4 {
   scale = scale === undefined ? 1.0 : scale; // Marsaglia, George. Choosing a Point from the Surface of a
   // Sphere. Ann. Math. Statist. 43 (1972), no. 2, 645--646.
   // http://projecteuclid.org/euclid.aoms/1177692644;
 
-  var v1, v2, v3, v4;
-  var s1, s2;
+  let v1, v2, v3, v4;
+  let s1, s2;
 
   do {
     v1 = glMatrix.RANDOM() * 2 - 1;
@@ -462,7 +463,7 @@ export function random(out, scale) {
     s2 = v3 * v3 + v4 * v4;
   } while (s2 >= 1);
 
-  var d = Math.sqrt((1 - s1) / s2);
+  const d = Math.sqrt((1 - s1) / s2);
   out[0] = scale * v1;
   out[1] = scale * v2;
   out[2] = scale * v3 * d;
@@ -478,8 +479,8 @@ export function random(out, scale) {
  * @returns {vec4} out
  */
 
-export function transformMat4(out, a, m) {
-  var x = a[0],
+export function transformMat4(out: vec4, a: ReadonlyVec4, m: ReadonlyMat4): vec4 {
+  const x = a[0],
     y = a[1],
     z = a[2],
     w = a[3];
@@ -498,19 +499,19 @@ export function transformMat4(out, a, m) {
  * @returns {vec4} out
  */
 
-export function transformQuat(out, a, q) {
-  var x = a[0],
+export function transformQuat(out: vec4, a: ReadonlyVec4, q: ReadonlyQuat): vec4 {
+  const x = a[0],
     y = a[1],
     z = a[2];
-  var qx = q[0],
+  const qx = q[0],
     qy = q[1],
     qz = q[2],
     qw = q[3]; // calculate quat * vec
 
-  var ix = qw * x + qy * z - qz * y;
-  var iy = qw * y + qz * x - qx * z;
-  var iz = qw * z + qx * y - qy * x;
-  var iw = -qx * x - qy * y - qz * z; // calculate result * inverse quat
+  const ix = qw * x + qy * z - qz * y;
+  const iy = qw * y + qz * x - qx * z;
+  const iz = qw * z + qx * y - qy * x;
+  const iw = -qx * x - qy * y - qz * z; // calculate result * inverse quat
 
   out[0] = ix * qw + iw * -qx + iy * -qz - iz * -qy;
   out[1] = iy * qw + iw * -qy + iz * -qx - ix * -qz;
@@ -525,7 +526,7 @@ export function transformQuat(out, a, q) {
  * @returns {vec4} out
  */
 
-export function zero(out) {
+export function zero(out: vec4): vec4 {
   out[0] = 0.0;
   out[1] = 0.0;
   out[2] = 0.0;
@@ -539,8 +540,8 @@ export function zero(out) {
  * @returns {String} string representation of the vector
  */
 
-export function str(a) {
-  return 'vec4(' + a[0] + ', ' + a[1] + ', ' + a[2] + ', ' + a[3] + ')';
+export function str(a: ReadonlyVec4): string {
+  return `vec4(${a[0]}, ${a[1]}, ${a[2]}, ${a[3]})`;
 }
 /**
  * Returns whether or not the vectors have exactly the same elements in the same position (when compared with ===)
@@ -550,7 +551,7 @@ export function str(a) {
  * @returns {Boolean} True if the vectors are equal, false otherwise.
  */
 
-export function exactEquals(a, b) {
+export function exactEquals(a: ReadonlyVec4, b: ReadonlyVec4): boolean {
   return a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3];
 }
 /**
@@ -561,12 +562,12 @@ export function exactEquals(a, b) {
  * @returns {Boolean} True if the vectors are equal, false otherwise.
  */
 
-export function equals(a, b) {
-  var a0 = a[0],
+export function equals(a: ReadonlyVec4, b: ReadonlyVec4): boolean {
+  const a0 = a[0],
     a1 = a[1],
     a2 = a[2],
     a3 = a[3];
-  var b0 = b[0],
+  const b0 = b[0],
     b1 = b[1],
     b2 = b[2],
     b3 = b[3];
@@ -582,43 +583,43 @@ export function equals(a, b) {
  * @function
  */
 
-export var sub = subtract;
+export const sub = subtract;
 /**
  * Alias for {@link vec4.multiply}
  * @function
  */
 
-export var mul = multiply;
+export const mul = multiply;
 /**
  * Alias for {@link vec4.divide}
  * @function
  */
 
-export var div = divide;
+export const div = divide;
 /**
  * Alias for {@link vec4.distance}
  * @function
  */
 
-export var dist = distance;
+export const dist = distance;
 /**
  * Alias for {@link vec4.squaredDistance}
  * @function
  */
 
-export var sqrDist = squaredDistance;
+export const sqrDist = squaredDistance;
 /**
  * Alias for {@link vec4.length}
  * @function
  */
 
-export var len = length;
+export const len = length;
 /**
  * Alias for {@link vec4.squaredLength}
  * @function
  */
 
-export var sqrLen = squaredLength;
+export const sqrLen = squaredLength;
 /**
  * Perform some operation over an array of vec4s.
  *
@@ -632,10 +633,17 @@ export var sqrLen = squaredLength;
  * @function
  */
 
-export var forEach = (function () {
-  var vec = create();
-  return function (a, stride, offset, count, fn, arg) {
-    var i, l;
+export const forEach = (() => {
+  const vec = create();
+  return (
+    a: number[],
+    stride: number,
+    offset: number,
+    count: number,
+    fn: (vec0: vec4, vec1: vec4, arg: any[]) => void,
+    arg: any[]
+  ) => {
+    let i, l;
 
     if (!stride) {
       stride = 4;

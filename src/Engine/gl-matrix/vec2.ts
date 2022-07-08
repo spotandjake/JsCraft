@@ -1,4 +1,5 @@
 import * as glMatrix from './common';
+import type { vec2, ReadonlyVec2, ReadonlyMat4, ReadonlyMat2, vec3 } from './Types';
 /**
  * 2 Dimensional Vector
  * @module vec2
@@ -10,8 +11,8 @@ import * as glMatrix from './common';
  * @returns {vec2} a new 2D vector
  */
 
-export function create() {
-  const out = glMatrix.ARRAY_TYPE(2);
+export function create(): vec2 {
+  const out = <vec2>glMatrix.ARRAY_TYPE(2);
 
   if (!(out instanceof Float32Array)) {
     out[0] = 0;
@@ -27,8 +28,8 @@ export function create() {
  * @returns {vec2} a new 2D vector
  */
 
-export function clone(a) {
-  var out = glMatrix.ARRAY_TYPE(2);
+export function clone(a: ReadonlyVec2): vec2 {
+  const out = <vec2>glMatrix.ARRAY_TYPE(2);
   out[0] = a[0];
   out[1] = a[1];
   return out;
@@ -41,8 +42,8 @@ export function clone(a) {
  * @returns {vec2} a new 2D vector
  */
 
-export function fromValues(x, y) {
-  var out = glMatrix.ARRAY_TYPE(2);
+export function fromValues(x: number, y: number): vec2 {
+  const out = <vec2>glMatrix.ARRAY_TYPE(2);
   out[0] = x;
   out[1] = y;
   return out;
@@ -55,7 +56,7 @@ export function fromValues(x, y) {
  * @returns {vec2} out
  */
 
-export function copy(out, a) {
+export function copy(out: vec2, a: ReadonlyVec2): vec2 {
   out[0] = a[0];
   out[1] = a[1];
   return out;
@@ -69,7 +70,7 @@ export function copy(out, a) {
  * @returns {vec2} out
  */
 
-export function set(out, x, y) {
+export function set(out: vec2, x: number, y: number): vec2 {
   out[0] = x;
   out[1] = y;
   return out;
@@ -83,7 +84,7 @@ export function set(out, x, y) {
  * @returns {vec2} out
  */
 
-export function add(out, a, b) {
+export function add(out: vec2, a: ReadonlyVec2, b: ReadonlyVec2): vec2 {
   out[0] = a[0] + b[0];
   out[1] = a[1] + b[1];
   return out;
@@ -97,7 +98,7 @@ export function add(out, a, b) {
  * @returns {vec2} out
  */
 
-export function subtract(out, a, b) {
+export function subtract(out: vec2, a: ReadonlyVec2, b: ReadonlyVec2): vec2 {
   out[0] = a[0] - b[0];
   out[1] = a[1] - b[1];
   return out;
@@ -111,7 +112,7 @@ export function subtract(out, a, b) {
  * @returns {vec2} out
  */
 
-export function multiply(out, a, b) {
+export function multiply(out: vec2, a: ReadonlyVec2, b: ReadonlyVec2): vec2 {
   out[0] = a[0] * b[0];
   out[1] = a[1] * b[1];
   return out;
@@ -125,7 +126,7 @@ export function multiply(out, a, b) {
  * @returns {vec2} out
  */
 
-export function divide(out, a, b) {
+export function divide(out: vec2, a: ReadonlyVec2, b: ReadonlyVec2): vec2 {
   out[0] = a[0] / b[0];
   out[1] = a[1] / b[1];
   return out;
@@ -138,7 +139,7 @@ export function divide(out, a, b) {
  * @returns {vec2} out
  */
 
-export function ceil(out, a) {
+export function ceil(out: vec2, a: ReadonlyVec2): vec2 {
   out[0] = Math.ceil(a[0]);
   out[1] = Math.ceil(a[1]);
   return out;
@@ -151,7 +152,7 @@ export function ceil(out, a) {
  * @returns {vec2} out
  */
 
-export function floor(out, a) {
+export function floor(out: vec2, a: ReadonlyVec2): vec2 {
   out[0] = Math.floor(a[0]);
   out[1] = Math.floor(a[1]);
   return out;
@@ -165,7 +166,7 @@ export function floor(out, a) {
  * @returns {vec2} out
  */
 
-export function min(out, a, b) {
+export function min(out: vec2, a: ReadonlyVec2, b: ReadonlyVec2): vec2 {
   out[0] = Math.min(a[0], b[0]);
   out[1] = Math.min(a[1], b[1]);
   return out;
@@ -179,7 +180,7 @@ export function min(out, a, b) {
  * @returns {vec2} out
  */
 
-export function max(out, a, b) {
+export function max(out: vec2, a: ReadonlyVec2, b: ReadonlyVec2): vec2 {
   out[0] = Math.max(a[0], b[0]);
   out[1] = Math.max(a[1], b[1]);
   return out;
@@ -192,7 +193,7 @@ export function max(out, a, b) {
  * @returns {vec2} out
  */
 
-export function round(out, a) {
+export function round(out: vec2, a: ReadonlyVec2): vec2 {
   out[0] = Math.round(a[0]);
   out[1] = Math.round(a[1]);
   return out;
@@ -206,7 +207,7 @@ export function round(out, a) {
  * @returns {vec2} out
  */
 
-export function scale(out, a, b) {
+export function scale(out: vec2, a: ReadonlyVec2, b: number): vec2 {
   out[0] = a[0] * b;
   out[1] = a[1] * b;
   return out;
@@ -221,7 +222,7 @@ export function scale(out, a, b) {
  * @returns {vec2} out
  */
 
-export function scaleAndAdd(out, a, b, scale) {
+export function scaleAndAdd(out: vec2, a: ReadonlyVec2, b: ReadonlyVec2, scale: number): vec2 {
   out[0] = a[0] + b[0] * scale;
   out[1] = a[1] + b[1] * scale;
   return out;
@@ -234,8 +235,8 @@ export function scaleAndAdd(out, a, b, scale) {
  * @returns {Number} distance between a and b
  */
 
-export function distance(a, b) {
-  var x = b[0] - a[0],
+export function distance(a: ReadonlyVec2, b: ReadonlyVec2): number {
+  const x = b[0] - a[0],
     y = b[1] - a[1];
   return Math.hypot(x, y);
 }
@@ -247,8 +248,8 @@ export function distance(a, b) {
  * @returns {Number} squared distance between a and b
  */
 
-export function squaredDistance(a, b) {
-  var x = b[0] - a[0],
+export function squaredDistance(a: ReadonlyVec2, b: ReadonlyVec2): number {
+  const x = b[0] - a[0],
     y = b[1] - a[1];
   return x * x + y * y;
 }
@@ -259,8 +260,8 @@ export function squaredDistance(a, b) {
  * @returns {Number} length of a
  */
 
-export function length(a) {
-  var x = a[0],
+export function length(a: ReadonlyVec2): number {
+  const x = a[0],
     y = a[1];
   return Math.hypot(x, y);
 }
@@ -271,8 +272,8 @@ export function length(a) {
  * @returns {Number} squared length of a
  */
 
-export function squaredLength(a) {
-  var x = a[0],
+export function squaredLength(a: ReadonlyVec2): number {
+  const x = a[0],
     y = a[1];
   return x * x + y * y;
 }
@@ -284,7 +285,7 @@ export function squaredLength(a) {
  * @returns {vec2} out
  */
 
-export function negate(out, a) {
+export function negate(out: vec2, a: ReadonlyVec2): vec2 {
   out[0] = -a[0];
   out[1] = -a[1];
   return out;
@@ -297,7 +298,7 @@ export function negate(out, a) {
  * @returns {vec2} out
  */
 
-export function inverse(out, a) {
+export function inverse(out: vec2, a: ReadonlyVec2): vec2 {
   out[0] = 1.0 / a[0];
   out[1] = 1.0 / a[1];
   return out;
@@ -310,10 +311,10 @@ export function inverse(out, a) {
  * @returns {vec2} out
  */
 
-export function normalize(out, a) {
-  var x = a[0],
+export function normalize(out: vec2, a: ReadonlyVec2): vec2 {
+  const x = a[0],
     y = a[1];
-  var len = x * x + y * y;
+  let len = x * x + y * y;
 
   if (len > 0) {
     //TODO: evaluate use of glm_invsqrt here?
@@ -332,7 +333,7 @@ export function normalize(out, a) {
  * @returns {Number} dot product of a and b
  */
 
-export function dot(a, b) {
+export function dot(a: ReadonlyVec2, b: ReadonlyVec2): number {
   return a[0] * b[0] + a[1] * b[1];
 }
 /**
@@ -345,8 +346,8 @@ export function dot(a, b) {
  * @returns {vec3} out
  */
 
-export function cross(out, a, b) {
-  var z = a[0] * b[1] - a[1] * b[0];
+export function cross(out: vec3, a: ReadonlyVec2, b: ReadonlyVec2): vec3 {
+  const z = a[0] * b[1] - a[1] * b[0];
   out[0] = out[1] = 0;
   out[2] = z;
   return out;
@@ -361,8 +362,8 @@ export function cross(out, a, b) {
  * @returns {vec2} out
  */
 
-export function lerp(out, a, b, t) {
-  var ax = a[0],
+export function lerp(out: vec2, a: ReadonlyVec2, b: ReadonlyVec2, t: number): vec2 {
+  const ax = a[0],
     ay = a[1];
   out[0] = ax + t * (b[0] - ax);
   out[1] = ay + t * (b[1] - ay);
@@ -376,9 +377,9 @@ export function lerp(out, a, b, t) {
  * @returns {vec2} out
  */
 
-export function random(out, scale) {
+export function random(out: vec2, scale: number): vec2 {
   scale = scale === undefined ? 1.0 : scale;
-  var r = glMatrix.RANDOM() * 2.0 * Math.PI;
+  const r = glMatrix.RANDOM() * 2.0 * Math.PI;
   out[0] = Math.cos(r) * scale;
   out[1] = Math.sin(r) * scale;
   return out;
@@ -392,8 +393,8 @@ export function random(out, scale) {
  * @returns {vec2} out
  */
 
-export function transformMat2(out, a, m) {
-  var x = a[0],
+export function transformMat2(out: vec2, a: ReadonlyVec2, m: ReadonlyMat2): vec2 {
+  const x = a[0],
     y = a[1];
   out[0] = m[0] * x + m[2] * y;
   out[1] = m[1] * x + m[3] * y;
@@ -408,8 +409,8 @@ export function transformMat2(out, a, m) {
  * @returns {vec2} out
  */
 
-export function transformMat2d(out, a, m) {
-  var x = a[0],
+export function transformMat2d(out: vec2, a: ReadonlyVec2, m: ReadonlyMat4): vec2 {
+  const x = a[0],
     y = a[1];
   out[0] = m[0] * x + m[2] * y + m[4];
   out[1] = m[1] * x + m[3] * y + m[5];
@@ -425,8 +426,8 @@ export function transformMat2d(out, a, m) {
  * @returns {vec2} out
  */
 
-export function transformMat3(out, a, m) {
-  var x = a[0],
+export function transformMat3(out: vec2, a: ReadonlyVec2, m: ReadonlyMat4): vec2 {
+  const x = a[0],
     y = a[1];
   out[0] = m[0] * x + m[3] * y + m[6];
   out[1] = m[1] * x + m[4] * y + m[7];
@@ -443,9 +444,9 @@ export function transformMat3(out, a, m) {
  * @returns {vec2} out
  */
 
-export function transformMat4(out, a, m) {
-  var x = a[0];
-  var y = a[1];
+export function transformMat4(out: vec2, a: ReadonlyVec2, m: ReadonlyMat4): vec2 {
+  const x = a[0];
+  const y = a[1];
   out[0] = m[0] * x + m[4] * y + m[12];
   out[1] = m[1] * x + m[5] * y + m[13];
   return out;
@@ -459,9 +460,9 @@ export function transformMat4(out, a, m) {
  * @returns {vec2} out
  */
 
-export function rotate(out, a, b, rad) {
+export function rotate(out: vec2, a: ReadonlyVec2, b: ReadonlyVec2, rad: number) {
   //Translate point to the origin
-  var p0 = a[0] - b[0],
+  const p0 = a[0] - b[0],
     p1 = a[1] - b[1],
     sinC = Math.sin(rad),
     cosC = Math.cos(rad); //perform rotation and translate to correct position
@@ -477,8 +478,8 @@ export function rotate(out, a, b, rad) {
  * @returns {Number} The angle in radians
  */
 
-export function angle(a, b) {
-  var x1 = a[0],
+export function angle(a: ReadonlyVec2, b: ReadonlyVec2): number {
+  const x1 = a[0],
     y1 = a[1],
     x2 = b[0],
     y2 = b[1],
@@ -496,7 +497,7 @@ export function angle(a, b) {
  * @returns {vec2} out
  */
 
-export function zero(out) {
+export function zero(out: vec2): vec2 {
   out[0] = 0.0;
   out[1] = 0.0;
   return out;
@@ -508,7 +509,7 @@ export function zero(out) {
  * @returns {String} string representation of the vector
  */
 
-export function str(a) {
+export function str(a: ReadonlyVec2): string {
   return `vec2(${a[0]}, ${a[1]})`;
 }
 /**
@@ -519,7 +520,7 @@ export function str(a) {
  * @returns {Boolean} True if the vectors are equal, false otherwise.
  */
 
-export function exactEquals(a, b) {
+export function exactEquals(a: ReadonlyVec2, b: ReadonlyVec2): boolean {
   return a[0] === b[0] && a[1] === b[1];
 }
 /**
@@ -530,7 +531,7 @@ export function exactEquals(a, b) {
  * @returns {Boolean} True if the vectors are equal, false otherwise.
  */
 
-export function equals(a, b) {
+export function equals(a: ReadonlyVec2, b: ReadonlyVec2): boolean {
   const a0 = a[0],
     a1 = a[1];
   const b0 = b[0],
@@ -596,9 +597,16 @@ export const sqrLen = squaredLength;
  */
 
 export const forEach = (function () {
-  var vec = create();
-  return function (a, stride, offset, count, fn, arg) {
-    var i, l;
+  const vec = create();
+  return (
+    a: number[],
+    stride: number,
+    offset: number,
+    count: number,
+    fn: (vec0: vec2, vec1: vec2, arg: any[]) => void,
+    arg: any[]
+  ) => {
+    let i, l;
 
     if (!stride) {
       stride = 2;
