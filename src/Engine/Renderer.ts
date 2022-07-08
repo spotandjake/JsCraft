@@ -1,9 +1,8 @@
 import loadVertexShader from '../Shaders/VertexShader.glsl';
 import loadFragmentShader from '../Shaders/FragmentShader.glsl';
-import { mat4 } from './gl-matrix/index.js';
+import { mat4, vec3 } from './gl-matrix/index.js';
 import type { Mesh } from './Types';
 import { radiansToDegrees } from './Utils';
-import Vector from './Vector.js';
 // Types
 export enum RenderType {
   Shaded,
@@ -21,8 +20,8 @@ class Renderer {
   private gameCanvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
   private shaderProgram: WebGLProgram;
-  private camPosition: Vector = new Vector(0, 0, 0);
-  private camDirection: Vector = new Vector(0, 0, 0);
+  private camPosition: vec3 = vec3.create();
+  private camDirection: vec3 = vec3.create();
   private lastTime: number;
   private meshes: Mesh[] = [];
   // Shader Attribs
@@ -63,8 +62,6 @@ class Renderer {
     gl.clearColor(121 / 255, 166 / 255, 255 / 255, 1.0);
     // Create The Text Context
     this.ctx = textCanvas.getContext('2d')!;
-    // Setup Canvas
-    this.setCanvasSize(width, height);
     // Setup Shaders
     const vertexShader = loadVertexShader(gl, gl.VERTEX_SHADER);
     const fragmentShader = loadFragmentShader(gl, gl.FRAGMENT_SHADER);
@@ -85,8 +82,8 @@ class Renderer {
     // Setup Matrices
     this.projMatrix = mat4.create();
     this.viewMatrix = mat4.create();
-    // Setup Perspective
-    this.setPerspective(60, 0.1, 10000);
+    // Setup Canvas
+    this.setCanvasSize(width, height);
     // TODO: Figure out if we need this
     // Create dummy model matrix
     const modelMatrix = (this.modelMatrix = mat4.create());
@@ -119,6 +116,8 @@ class Renderer {
     this.textCanvas.height = height;
     this.gameCanvas.width = width;
     this.gameCanvas.height = height;
+    // Setup Perspective
+    this.setPerspective(60, 0.1, 10000);
   }
   private compileShaders(vertexShader: WebGLShader, fragmentShader: WebGLShader): WebGLProgram {
     const { gl } = this;
@@ -171,19 +170,29 @@ class Renderer {
     // Render Debug Text
     ctx.clearRect(0, 0, textCanvas.width, textCanvas.height);
     // Render Camera Position
-    // console.log(this.camPosition);
-    this.renderText(`x: ${camPosition.x}, y: ${camPosition.y}, z: ${camPosition.z}`, 20, 10, 10);
+    this.renderText(`x: ${camPosition[0]}, y: ${camPosition[1]}, z: ${camPosition[2]}`, 20, 10, 10);
     // Render Camera Direction
     this.renderText(
-      `pitch: ${radiansToDegrees(camDirection.x)}, yaw: ${radiansToDegrees(
-        camDirection.y
-      )}, roll: ${radiansToDegrees(camDirection.z)}`,
+      `pitch: ${radiansToDegrees(camDirection[0])}, yaw: ${radiansToDegrees(
+        camDirection[1]
+      )}, roll: ${radiansToDegrees(camDirection[2])}`,
       20,
       10,
       40
     );
     // Render Fps
     this.renderText(`fps: ${Math.round(1 / deltaTime)}`, 20, 10, 60);
+    // Render Memory Usage
+    this.renderText(
+      //@ts-ignore
+      `memory: ${(performance.memory.usedJSHeapSize / 1000 / 1000).toFixed(4)}/${
+        //@ts-ignore
+        (performance.memory.jsHeapSizeLimit / 1000 / 1000).toFixed(4)
+      }mb`,
+      20,
+      10,
+      80
+    );
     // Render Debug Stuff
   }
   // Render Helpers
@@ -202,9 +211,9 @@ class Renderer {
     // Bind Active Buffer
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
     // Define The Matrix Layout
-    gl.vertexAttribPointer(this.aPos, 3, gl.FLOAT, false, 9 * 4, 0);
-    gl.vertexAttribPointer(this.aColor, 4, gl.FLOAT, false, 9 * 4, 5 * 4);
-    gl.vertexAttribPointer(this.aTexCoord, 2, gl.FLOAT, false, 9 * 4, 3 * 4);
+    gl.vertexAttribPointer(this.aPos, 3, gl.FLOAT, false, 8 * 4, 0);
+    gl.vertexAttribPointer(this.aColor, 3, gl.FLOAT, false, 8 * 4, 5 * 4);
+    gl.vertexAttribPointer(this.aTexCoord, 2, gl.FLOAT, false, 8 * 4, 3 * 4);
     // Draw The Buffer
     switch (this.renderType) {
       case RenderType.Shaded:
@@ -219,7 +228,7 @@ class Renderer {
   public resize(width: number, height: number) {
     this.setCanvasSize(width, height);
   }
-  public setCamera(position: Vector, direction: Vector) {
+  public setCamera(position: vec3, direction: vec3) {
     const { gl } = this;
     // Set The Camera Position
     this.camPosition = position;
@@ -227,10 +236,10 @@ class Renderer {
     this.camDirection = direction;
     // Modify The viewMatrix
     mat4.identity(this.viewMatrix);
-    mat4.rotate(this.viewMatrix, this.viewMatrix, -direction.x, [1, 0, 0]);
-    mat4.rotate(this.viewMatrix, this.viewMatrix, direction.y, [0, 1, 0]);
-    mat4.rotate(this.viewMatrix, this.viewMatrix, -direction.z, [0, 0, 1]);
-    mat4.translate(this.viewMatrix, this.viewMatrix, position.clone().mulScalar(-1).toArray());
+    mat4.rotate(this.viewMatrix, this.viewMatrix, -direction[0], [1, 0, 0]);
+    mat4.rotate(this.viewMatrix, this.viewMatrix, direction[1], [0, 1, 0]);
+    mat4.rotate(this.viewMatrix, this.viewMatrix, -direction[2], [0, 0, 1]);
+    mat4.translate(this.viewMatrix, this.viewMatrix, vec3.scale(vec3.create(), position, -1));
     gl.uniformMatrix4fv(this.uViewMat, false, this.viewMatrix);
   }
   public clearMeshes() {

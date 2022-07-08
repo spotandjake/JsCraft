@@ -2,18 +2,11 @@ import { BlockType, BlockDirection } from '../../Types';
 import type { BlockTexture, BlockColor } from '../../Types';
 import { pushQuad } from '../../Utils';
 export default {
-  blockType: BlockType.Grass,
-  transparent: false,
+  blockType: BlockType.Water,
+  transparent: true,
   texture: (direction: BlockDirection): [number, number, number, number] => {
     // Handle The Block
-    switch (direction) {
-      case BlockDirection.Down:
-        return [2 / 16, 0 / 16, 3 / 16, 1 / 16];
-      case BlockDirection.Up:
-        return [14 / 16, 0 / 16, 15 / 16, 1 / 16];
-      default:
-        return [3 / 16, 0 / 16, 4 / 16, 1 / 16];
-    }
+    return [13 / 16, 12 / 16, 14 / 16, 13 / 16];
   },
   mesh: (
     out: number[],

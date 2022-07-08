@@ -3,12 +3,12 @@ import type World from './World';
 import { BlockType, BlockDirection } from '../Types';
 import type { Mesh } from '../Types';
 class Chunk {
-  private blocks: Block[];
+  private blocks: (Block | undefined)[];
   private size: number;
-  private mesh: Mesh | undefined = undefined;
-  private x: number;
-  private y: number;
-  private z: number;
+  public mesh: Mesh | undefined = undefined;
+  public x: number;
+  public y: number;
+  public z: number;
   constructor(size: number, x: number, y: number, z: number) {
     this.size = size;
     this.x = x;
@@ -37,8 +37,12 @@ class Chunk {
     // If Block Is Out Of Bounds Throw Error
     if (x < 0 || y < 0 || z < 0 || x >= this.size || y >= this.size || z >= this.size)
       throw `Block(x: ${x}, y: ${y}): Cannot Set Block out Of Chunk Bounds`;
-    // Set The Block
-    this.blocks[this.toIndex(x, y, z)] = block;
+    // We just clear air blocks
+    if (block.blockType == BlockType.Air) {
+      this.blocks[this.toIndex(x, y, z)] = undefined;
+    } else {
+      this.blocks[this.toIndex(x, y, z)] = block;
+    }
     // Clear The Mesh Cache
     this.mesh = undefined;
     // TODO: Invalidate Surrounding Chunks If On Edge
@@ -61,15 +65,17 @@ class Chunk {
     if (block === undefined) {
       return true;
     } else {
-      return block.blockType === BlockType.Air;
+      // TODO: Get Weather The block Is Transparent From The Texture
+      return block.blockType === BlockType.Air || block.transparent;
     }
   }
-  private _getBlock(x: number, y: number, z: number): Block {
+  private _getBlock(x: number, y: number, z: number): Block | undefined {
     return this.blocks[this.toIndex(x, y, z)];
   }
-  public render(world: World, gl: WebGL2RenderingContext) {
+  public render(world: World, gl: WebGL2RenderingContext): Mesh {
     // Generate Mesh Data
     if (this.mesh === undefined) {
+      const color: [number, number, number] = [1, 1, 1];
       // Create A Chunk mesh with a guess size to try to avoid reallocations based on pushQuad
       const chunkMesh: number[] = [];
       // Generate The Meshes For All The Cubes
@@ -99,10 +105,10 @@ class Chunk {
                 // Get The Block
                 const canSeeThrough = chunk.canSeeThrough(x, y, 0);
                 if (canSeeThrough) {
-                  block.render(BlockDirection.South, chunkMesh);
+                  block.render(BlockDirection.South, chunkMesh, color);
                 }
               } else {
-                block.render(BlockDirection.South, chunkMesh);
+                block.render(BlockDirection.South, chunkMesh, color);
               }
             }
             if (z === 0 || this.canSeeThrough(x, y, z - 1)) {
@@ -116,10 +122,10 @@ class Chunk {
                 // Get The Block
                 const canSeeThrough = chunk.canSeeThrough(x, y, chunkSizeMinusOne);
                 if (canSeeThrough) {
-                  block.render(BlockDirection.North, chunkMesh);
+                  block.render(BlockDirection.North, chunkMesh, color);
                 }
               } else {
-                block.render(BlockDirection.North, chunkMesh);
+                block.render(BlockDirection.North, chunkMesh, color);
               }
             }
             if (x === chunkSizeMinusOne || this.canSeeThrough(x + 1, y, z)) {
@@ -133,10 +139,10 @@ class Chunk {
                 // Get The Block
                 const canSeeThrough = chunk.canSeeThrough(0, y, z);
                 if (canSeeThrough) {
-                  block.render(BlockDirection.East, chunkMesh);
+                  block.render(BlockDirection.East, chunkMesh, color);
                 }
               } else {
-                block.render(BlockDirection.East, chunkMesh);
+                block.render(BlockDirection.East, chunkMesh, color);
               }
             }
             if (x === 0 || this.canSeeThrough(x - 1, y, z)) {
@@ -150,10 +156,10 @@ class Chunk {
                 // Get The Block
                 const canSeeThrough = chunk.canSeeThrough(chunkSizeMinusOne, y, z);
                 if (canSeeThrough) {
-                  block.render(BlockDirection.West, chunkMesh);
+                  block.render(BlockDirection.West, chunkMesh, color);
                 }
               } else {
-                block.render(BlockDirection.West, chunkMesh);
+                block.render(BlockDirection.West, chunkMesh, color);
               }
             }
             if (y === chunkSizeMinusOne || this.canSeeThrough(x, y + 1, z)) {
@@ -167,10 +173,10 @@ class Chunk {
                 // Get The Block
                 const canSeeThrough = chunk.canSeeThrough(x, 0, z);
                 if (canSeeThrough) {
-                  block.render(BlockDirection.Up, chunkMesh);
+                  block.render(BlockDirection.Up, chunkMesh, color);
                 }
               } else {
-                block.render(BlockDirection.Up, chunkMesh);
+                block.render(BlockDirection.Up, chunkMesh, color);
               }
             }
             if (y === 0 || this.canSeeThrough(x, y - 1, z)) {
@@ -184,10 +190,10 @@ class Chunk {
                 // Get The Block
                 const canSeeThrough = chunk.canSeeThrough(x, chunkSizeMinusOne, z);
                 if (canSeeThrough) {
-                  block.render(BlockDirection.Down, chunkMesh);
+                  block.render(BlockDirection.Down, chunkMesh, color);
                 }
               } else {
-                block.render(BlockDirection.Down, chunkMesh);
+                block.render(BlockDirection.Down, chunkMesh, color);
               }
             }
             // TODO: If The Quad is not The Full Width Determine If We Need To Show The Other Sides
@@ -203,9 +209,10 @@ class Chunk {
       // Cache The Mesh
       this.mesh = {
         mesh: buffer,
-        vertexCount: chunkMesh.length / 9,
+        vertexCount: chunkMesh.length / 8,
       };
     }
+    return this.mesh;
   }
   public getMesh() {
     // Return The Mesh
