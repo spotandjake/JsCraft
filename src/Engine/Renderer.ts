@@ -25,19 +25,20 @@ class Renderer {
   private lastTime: number;
   private meshes: Mesh[] = [];
   // Shader Attribs
+  private uNormMat: WebGLUniformLocation;
   private uProjMat: WebGLUniformLocation;
   private uViewMat: WebGLUniformLocation;
   private uModelMat: WebGLUniformLocation;
   private uSampler: WebGLUniformLocation;
   private aPos: GLint;
-  private aColor: GLint;
+  private aVertexNormal: GLint;
   private aTexCoord: GLint;
   // Matrixes
+  private normalMatrix: mat4;
   private projMatrix: mat4;
   private viewMatrix: mat4;
   private modelMatrix: mat4;
   // Textures
-  private whiteTexture: WebGLTexture;
   private terrainTexture: WebGLTexture;
   // Constructor
   constructor(
@@ -57,6 +58,7 @@ class Renderer {
     const gl = (this.gl = gameCanvas.getContext('webgl2')!);
     gl.enable(gl.DEPTH_TEST);
     gl.enable(gl.CULL_FACE);
+    gl.enable(gl.BLEND);
     gl.cullFace(gl.BACK);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     gl.clearColor(121 / 255, 166 / 255, 255 / 255, 1.0);
@@ -68,20 +70,24 @@ class Renderer {
     const shaderProgram = (this.shaderProgram = this.compileShaders(vertexShader, fragmentShader));
     gl.useProgram(shaderProgram);
     // Get Shader Attributes
+    this.uNormMat = gl.getUniformLocation(shaderProgram, 'uNormalMatrix')!;
     this.uProjMat = gl.getUniformLocation(shaderProgram, 'uProjMatrix')!;
     this.uViewMat = gl.getUniformLocation(shaderProgram, 'uViewMatrix')!;
     this.uModelMat = gl.getUniformLocation(shaderProgram, 'uModelMatrix')!;
     this.uSampler = gl.getUniformLocation(shaderProgram, 'uSampler')!;
     this.aPos = gl.getAttribLocation(shaderProgram, 'aPos');
-    this.aColor = gl.getAttribLocation(shaderProgram, 'aColor');
+    this.aVertexNormal = gl.getAttribLocation(shaderProgram, 'aVertexNormal');
     this.aTexCoord = gl.getAttribLocation(shaderProgram, 'aTexCoord');
     // Enable Attribute Input
     gl.enableVertexAttribArray(this.aPos);
-    gl.enableVertexAttribArray(this.aColor);
+    gl.enableVertexAttribArray(this.aVertexNormal);
     gl.enableVertexAttribArray(this.aTexCoord);
     // Setup Matrices
+    this.normalMatrix = mat4.create();
     this.projMatrix = mat4.create();
     this.viewMatrix = mat4.create();
+    // Set The Normal Matrix
+    gl.uniformMatrix4fv(this.uNormMat, false, this.normalMatrix);
     // Setup Canvas
     this.setCanvasSize(width, height);
     // TODO: Figure out if we need this
@@ -89,6 +95,9 @@ class Renderer {
     const modelMatrix = (this.modelMatrix = mat4.create());
     mat4.identity(modelMatrix);
     gl.uniformMatrix4fv(this.uModelMat, false, modelMatrix);
+    // Set The Normal Matrix
+    mat4.invert(this.normalMatrix, this.modelMatrix);
+    mat4.transpose(this.normalMatrix, this.normalMatrix);
     // Load The Texture Atlas
     this.terrainTexture = gl.createTexture()!;
     terrainTexture.onload = () => {
@@ -97,15 +106,6 @@ class Renderer {
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
     };
-    // Create 1px white texture for pure vertex color operations (e.g. picking)
-    const whiteTexture = (this.whiteTexture = gl.createTexture()!);
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, whiteTexture);
-    const white = new Uint8Array([255, 255, 255, 255]);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, white);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.uniform1i(this.uSampler, 0);
     // Start Render Loop
     requestAnimationFrame(this.render.bind(this));
   }
@@ -173,7 +173,7 @@ class Renderer {
     this.renderText(`x: ${camPosition[0]}, y: ${camPosition[1]}, z: ${camPosition[2]}`, 20, 10, 10);
     // Render Camera Direction
     this.renderText(
-      `pitch: ${radiansToDegrees(camDirection[0])}, yaw: ${radiansToDegrees(
+      `yaw: ${radiansToDegrees(camDirection[0])}, pitch: ${radiansToDegrees(
         camDirection[1]
       )}, roll: ${radiansToDegrees(camDirection[2])}`,
       20,
@@ -194,6 +194,21 @@ class Renderer {
       80
     );
     // Render Debug Stuff
+    // TODO: Move this into actual ui
+    // set line stroke and line width
+    ctx.strokeStyle = 'red';
+    ctx.lineWidth = 5;
+    // draw a red line
+    const crossSize = 25 / 2;
+    const hCenter = textCanvas.width / 2 + ctx.lineWidth;
+    const vCenter = textCanvas.height / 2 + ctx.lineWidth;
+    ctx.beginPath();
+    ctx.moveTo(textCanvas.width / 2 - crossSize, vCenter);
+    ctx.lineTo(textCanvas.width / 2 + crossSize + ctx.lineWidth, vCenter);
+    ctx.moveTo(hCenter, textCanvas.height / 2 - crossSize);
+    ctx.lineTo(hCenter, textCanvas.height / 2 + crossSize + ctx.lineWidth);
+    ctx.stroke();
+    ctx.closePath();
   }
   // Render Helpers
   public renderText(text: string, textSize: number, x: number, y: number) {
@@ -212,8 +227,8 @@ class Renderer {
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
     // Define The Matrix Layout
     gl.vertexAttribPointer(this.aPos, 3, gl.FLOAT, false, 8 * 4, 0);
-    gl.vertexAttribPointer(this.aColor, 3, gl.FLOAT, false, 8 * 4, 5 * 4);
     gl.vertexAttribPointer(this.aTexCoord, 2, gl.FLOAT, false, 8 * 4, 3 * 4);
+    gl.vertexAttribPointer(this.aVertexNormal, 3, gl.FLOAT, false, 8 * 4, 4 * 4);
     // Draw The Buffer
     switch (this.renderType) {
       case RenderType.Shaded:
@@ -236,8 +251,8 @@ class Renderer {
     this.camDirection = direction;
     // Modify The viewMatrix
     mat4.identity(this.viewMatrix);
-    mat4.rotate(this.viewMatrix, this.viewMatrix, -direction[0], [1, 0, 0]);
-    mat4.rotate(this.viewMatrix, this.viewMatrix, direction[1], [0, 1, 0]);
+    mat4.rotate(this.viewMatrix, this.viewMatrix, -direction[1], [1, 0, 0]);
+    mat4.rotate(this.viewMatrix, this.viewMatrix, direction[0], [0, 1, 0]);
     mat4.rotate(this.viewMatrix, this.viewMatrix, -direction[2], [0, 0, 1]);
     mat4.translate(this.viewMatrix, this.viewMatrix, vec3.scale(vec3.create(), position, -1));
     gl.uniformMatrix4fv(this.uViewMat, false, this.viewMatrix);

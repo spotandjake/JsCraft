@@ -1,4 +1,4 @@
-import { BlockType, BlockDirection, BlockColor } from '../Types';
+import { BlockType, BlockDirection } from '../Types';
 import getBlockData from './Blocks/index';
 // Block Constructor
 class Block {
@@ -25,12 +25,12 @@ class Block {
       this.transparent = blockData.transparent;
     }
   }
-  public render(side: BlockDirection, outMesh: number[] = [], color: BlockColor): number[] {
+  public render(side: BlockDirection, outMesh: number[] = []): number[] {
     // Render Block
     const blockData = getBlockData(this.blockType);
     if (blockData == undefined) return [];
     const texture = blockData.texture(side);
-    return blockData.mesh(outMesh, side, texture, this.x, this.y, this.z, color);
+    return blockData.mesh(outMesh, side, texture, this.x, this.y, this.z);
   }
 }
 export default Block;

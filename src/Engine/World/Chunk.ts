@@ -21,7 +21,7 @@ class Chunk {
   public getBlock(x: number, y: number, z: number): Block {
     // If Block Is Out Of Bounds Throw Error
     if (x < 0 || y < 0 || z < 0 || x >= this.size || y >= this.size || z >= this.size)
-      throw `Block(x: ${x}, y: ${y}): Cannot Get Block out Of Chunk Bounds`;
+      throw `Block(x: ${x}, y: ${y}, z: ${z}): Cannot Get Block out Of Chunk Bounds`;
     // Try To Get The Block
     const block = this.blocks[this.toIndex(x, y, z)];
     if (block === undefined) {
@@ -59,14 +59,20 @@ class Chunk {
   //   const x = index % this.size;
   //   return [x, y, z];
   // }
-  public canSeeThrough(x: number, y: number, z: number): boolean {
+  public canSeeThrough(x: number, y: number, z: number, currentBlock?: Block): boolean {
     // Try To Get The Block
     const block = this.blocks[this.toIndex(x, y, z)];
     if (block === undefined) {
       return true;
     } else {
+      // Test If We Can See Through
+      if (
+        block.blockType == BlockType.Air ||
+        (block.transparent && currentBlock?.blockType != block.blockType)
+      )
+        return true;
       // TODO: Get Weather The block Is Transparent From The Texture
-      return block.blockType === BlockType.Air || block.transparent;
+      return false;
     }
   }
   private _getBlock(x: number, y: number, z: number): Block | undefined {
@@ -75,7 +81,6 @@ class Chunk {
   public render(world: World, gl: WebGL2RenderingContext): Mesh {
     // Generate Mesh Data
     if (this.mesh === undefined) {
-      const color: [number, number, number] = [1, 1, 1];
       // Create A Chunk mesh with a guess size to try to avoid reallocations based on pushQuad
       const chunkMesh: number[] = [];
       // Generate The Meshes For All The Cubes
@@ -94,7 +99,7 @@ class Chunk {
             }
             // Determine Which Sides Are Open
             // TODO: Cross Chunk Culling
-            if (this.canSeeThrough(x, y, z + 1)) {
+            if (this.canSeeThrough(x, y, z + 1, block)) {
               if (z === chunkSizeMinusOne) {
                 // Check Against The Block In The Next Chunk
                 const chunk = world.getChunk(
@@ -103,15 +108,15 @@ class Chunk {
                   this.z / chunkSize + 1
                 );
                 // Get The Block
-                const canSeeThrough = chunk.canSeeThrough(x, y, 0);
+                const canSeeThrough = chunk.canSeeThrough(x, y, 0, block);
                 if (canSeeThrough) {
-                  block.render(BlockDirection.South, chunkMesh, color);
+                  block.render(BlockDirection.South, chunkMesh);
                 }
               } else {
-                block.render(BlockDirection.South, chunkMesh, color);
+                block.render(BlockDirection.South, chunkMesh);
               }
             }
-            if (z === 0 || this.canSeeThrough(x, y, z - 1)) {
+            if (z === 0 || this.canSeeThrough(x, y, z - 1, block)) {
               if (z === 0) {
                 // Check Against The Block In The Next Chunk
                 const chunk = world.getChunk(
@@ -120,15 +125,15 @@ class Chunk {
                   this.z / chunkSize - 1
                 );
                 // Get The Block
-                const canSeeThrough = chunk.canSeeThrough(x, y, chunkSizeMinusOne);
+                const canSeeThrough = chunk.canSeeThrough(x, y, chunkSizeMinusOne, block);
                 if (canSeeThrough) {
-                  block.render(BlockDirection.North, chunkMesh, color);
+                  block.render(BlockDirection.North, chunkMesh);
                 }
               } else {
-                block.render(BlockDirection.North, chunkMesh, color);
+                block.render(BlockDirection.North, chunkMesh);
               }
             }
-            if (x === chunkSizeMinusOne || this.canSeeThrough(x + 1, y, z)) {
+            if (x === chunkSizeMinusOne || this.canSeeThrough(x + 1, y, z, block)) {
               if (x === chunkSizeMinusOne) {
                 // Check Against The Block In The Next Chunk
                 const chunk = world.getChunk(
@@ -137,15 +142,15 @@ class Chunk {
                   this.z / chunkSize
                 );
                 // Get The Block
-                const canSeeThrough = chunk.canSeeThrough(0, y, z);
+                const canSeeThrough = chunk.canSeeThrough(0, y, z, block);
                 if (canSeeThrough) {
-                  block.render(BlockDirection.East, chunkMesh, color);
+                  block.render(BlockDirection.East, chunkMesh);
                 }
               } else {
-                block.render(BlockDirection.East, chunkMesh, color);
+                block.render(BlockDirection.East, chunkMesh);
               }
             }
-            if (x === 0 || this.canSeeThrough(x - 1, y, z)) {
+            if (x === 0 || this.canSeeThrough(x - 1, y, z, block)) {
               if (x === 0) {
                 // Check Against The Block In The Next Chunk
                 const chunk = world.getChunk(
@@ -154,15 +159,15 @@ class Chunk {
                   this.z / chunkSize
                 );
                 // Get The Block
-                const canSeeThrough = chunk.canSeeThrough(chunkSizeMinusOne, y, z);
+                const canSeeThrough = chunk.canSeeThrough(chunkSizeMinusOne, y, z, block);
                 if (canSeeThrough) {
-                  block.render(BlockDirection.West, chunkMesh, color);
+                  block.render(BlockDirection.West, chunkMesh);
                 }
               } else {
-                block.render(BlockDirection.West, chunkMesh, color);
+                block.render(BlockDirection.West, chunkMesh);
               }
             }
-            if (y === chunkSizeMinusOne || this.canSeeThrough(x, y + 1, z)) {
+            if (y === chunkSizeMinusOne || this.canSeeThrough(x, y + 1, z, block)) {
               if (y === chunkSizeMinusOne) {
                 // Check Against The Block In The Next Chunk
                 const chunk = world.getChunk(
@@ -171,15 +176,15 @@ class Chunk {
                   this.z / chunkSize
                 );
                 // Get The Block
-                const canSeeThrough = chunk.canSeeThrough(x, 0, z);
+                const canSeeThrough = chunk.canSeeThrough(x, 0, z, block);
                 if (canSeeThrough) {
-                  block.render(BlockDirection.Up, chunkMesh, color);
+                  block.render(BlockDirection.Up, chunkMesh);
                 }
               } else {
-                block.render(BlockDirection.Up, chunkMesh, color);
+                block.render(BlockDirection.Up, chunkMesh);
               }
             }
-            if (y === 0 || this.canSeeThrough(x, y - 1, z)) {
+            if (y === 0 || this.canSeeThrough(x, y - 1, z, block)) {
               if (y === 0) {
                 // Check Against The Block In The Next Chunk
                 const chunk = world.getChunk(
@@ -188,12 +193,12 @@ class Chunk {
                   this.z / chunkSize
                 );
                 // Get The Block
-                const canSeeThrough = chunk.canSeeThrough(x, chunkSizeMinusOne, z);
+                const canSeeThrough = chunk.canSeeThrough(x, chunkSizeMinusOne, z, block);
                 if (canSeeThrough) {
-                  block.render(BlockDirection.Down, chunkMesh, color);
+                  block.render(BlockDirection.Down, chunkMesh);
                 }
               } else {
-                block.render(BlockDirection.Down, chunkMesh, color);
+                block.render(BlockDirection.Down, chunkMesh);
               }
             }
             // TODO: If The Quad is not The Full Width Determine If We Need To Show The Other Sides

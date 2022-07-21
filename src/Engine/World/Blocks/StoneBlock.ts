@@ -1,11 +1,11 @@
 import { BlockType, BlockDirection } from '../../Types';
 import cubeMesh from './Mesh/Cube';
 export default {
-  blockType: BlockType.Water,
-  transparent: true,
+  blockType: BlockType.Stone,
+  transparent: false,
   texture: (direction: BlockDirection): [number, number, number, number] => {
     // Handle The Block
-    return [13 / 16, 12 / 16, 14 / 16, 13 / 16];
+    return [1 / 16, 0 / 16, 2 / 16, 1 / 16];
   },
   mesh: cubeMesh,
 };

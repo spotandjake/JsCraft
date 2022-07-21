@@ -73,10 +73,11 @@ class World {
     return vec3.fromValues(chunkX, chunkY, chunkZ);
   }
   private getBlockCoordinates(x: number, y: number, z: number) {
+    // TODO: I dont this this is correct
     return vec3.fromValues(
-      Math.abs(x % this.chunkSize),
-      Math.abs(y % this.chunkSize),
-      Math.abs(z % this.chunkSize)
+      x < 0 ? this.chunkSize + (x % this.chunkSize) : Math.abs(x % this.chunkSize),
+      y < 0 ? this.chunkSize + (y % this.chunkSize) : Math.abs(y % this.chunkSize),
+      z < 0 ? this.chunkSize + (z % this.chunkSize) : Math.abs(z % this.chunkSize)
     );
   }
   // Safe Chunk Elements Manipulation
@@ -233,6 +234,104 @@ class World {
       }
     }
     // TODO: Load The New Chunks
+  }
+  // Interaction Helpers
+  public castRay(origin: vec3, direction: vec3, max: number): vec3 | undefined {
+    // Get Forward Vector
+    // const forward = vec3.scaleAndAdd(
+    //   vec3.create(),
+    //   // playerPosition,
+    //   playerPosition,
+    //   vec3.normalize(
+    //     vec3.create(),
+    //     vec3.fromValues(
+    //       // -180
+    //       Math.sin(-playerDirection[0] - Math.PI) * Math.cos(-playerDirection[1]),
+    //       Math.sin(playerDirection[1]),
+    //       Math.cos(-playerDirection[0] - Math.PI) * Math.cos(-playerDirection[1])
+    //     )
+    //   ),
+    //   5
+    // );
+    const forwardVector = vec3.normalize(
+      vec3.create(),
+      vec3.fromValues(
+        // -180
+        Math.sin(-direction[0] - Math.PI) * Math.cos(-direction[1]),
+        Math.sin(direction[1]),
+        Math.cos(-direction[0] - Math.PI) * Math.cos(-direction[1])
+      )
+    );
+    const pos = vec3.clone(origin);
+    // Go Forward
+    let i = 0;
+    while (i < max) {
+      i++;
+      vec3.add(pos, pos, forwardVector);
+      // Check Block
+      const hit = this.getBlock(Math.trunc(pos[0]), Math.trunc(pos[1]), Math.trunc(pos[2]));
+      if (hit.blockType != BlockType.Air)
+        return vec3.fromValues(Math.trunc(pos[0]), Math.trunc(pos[1]), Math.trunc(pos[2]));
+    }
+    return undefined;
+    // //Todo: find out why this is so slow
+    // const pos = vec3.floor(vec3.create(), origin);
+
+    // const step = vec3.fromValues(
+    //   Math.sign(direction[0]),
+    //   Math.sign(direction[1]),
+    //   Math.sign(direction[2])
+    // );
+    // const tDelta = vec3.divide(vec3.create(), step, direction);
+
+    // let tMaxX, tMaxY, tMaxZ;
+
+    // const fr = vec3.subtract(vec3.create(), origin, vec3.floor(vec3.create(), origin));
+
+    // tMaxX = tDelta[0] * (direction[0] > 0.0 ? 1.0 - fr[0] : fr[0]);
+    // tMaxY = tDelta[1] * (direction[1] > 0.0 ? 1.0 - fr[1] : fr[1]);
+    // tMaxZ = tDelta[2] * (direction[2] > 0.0 ? 1.0 - fr[2] : fr[2]);
+    // // let norm;
+    // let i = 0;
+    // do {
+    //   const h = this.getBlock(Math.trunc(pos[0]), Math.trunc(pos[1]), Math.trunc(pos[2]));
+    //   if (h.blockType != BlockType.Air) {
+    //     return vec3.fromValues(h.x, h.y, h.z);
+    //   }
+    //   if (tMaxX < tMaxY) {
+    //     if (tMaxZ < tMaxX) {
+    //       tMaxZ += tDelta[2];
+    //       pos[2] += step[2];
+    //       // norm = vec3.fromValues(0, 0, -step[2]);
+    //     } else {
+    //       tMaxX += tDelta[0];
+    //       pos[0] += step[0];
+    //       // norm = vec3.fromValues(-step[0], 0, 0);
+    //     }
+    //   } else {
+    //     if (tMaxZ < tMaxY) {
+    //       tMaxZ += tDelta[2];
+    //       pos[2] += step[2];
+    //       // norm = vec3.fromValues(0, 0, -step[2]);
+    //     } else {
+    //       tMaxY += tDelta[1];
+    //       pos[1] += step[1];
+    //       // norm = vec3.fromValues(0, -step[1], 0);
+    //     }
+    //   }
+    //   i++;
+    // } while (vec3.distance(origin, pos) < max && i < 100);
+    // if (i >= 99) {
+    //   console.log(
+    //     'blockPosition',
+    //     pos,
+    //     'blockType',
+    //     this.getBlock(Math.trunc(pos[0]), Math.trunc(pos[1]), Math.trunc(pos[2])).blockType,
+    //     'distance',
+    //     vec3.distance(origin, pos)
+    //   );
+    // }
+    // return undefined;
   }
   // Render World
   public render(renderer: Renderer, playerPosition: vec3, playerDirection: vec3): Mesh[] {

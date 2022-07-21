@@ -1,4 +1,4 @@
-import type { BlockType, BlockDirection, BlockTexture, BlockColor } from '../Types';
+import type { BlockType, BlockDirection, BlockTexture } from '../Types';
 // BlockSchema
 interface BlockSchema {
   blockType: BlockType;
@@ -10,8 +10,7 @@ interface BlockSchema {
     texture: BlockTexture,
     x: number,
     y: number,
-    z: number,
-    color: BlockColor
+    z: number
   ) => number[];
 }
 export default BlockSchema;

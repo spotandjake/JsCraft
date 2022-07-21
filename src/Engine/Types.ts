@@ -15,7 +15,7 @@ export interface Mesh {
 export const enum BlockType {
   Air,
   Grass,
+  Stone,
   Water,
 }
 export type BlockTexture = [number, number, number, number];
-export type BlockColor = [number, number, number];
