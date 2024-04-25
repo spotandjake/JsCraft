@@ -29,7 +29,7 @@ window.onresize = () => renderer.resize(window.innerWidth, window.innerHeight);
 // Handle Update Function
 const controller = new Controller(document);
 // Create World
-const world = new World(1);
+const world = new World(1, 9);
 // Setup Update Loop
 const playerPosition = vec3.clone(world.worldSpawn);
 playerPosition[1] += 2; // Add Player Height
@@ -71,25 +71,25 @@ renderer.updateFunction = (deltaTime: number) => {
   vec3.add(playerPosition, playerPosition, velocity);
   // TODO: Physics
   // Perform Ray Cast
-  const result = world.castRay(
-    playerPosition,
-    vec3.fromValues(
-      Math.sin(-playerDirection[0] - Math.PI) * Math.cos(-playerDirection[1]),
-      Math.sin(playerDirection[1]),
-      Math.cos(-playerDirection[0] - Math.PI) * Math.cos(-playerDirection[1])
-    ),
-    5
-  );
-  if (result != undefined) {
-    // Clear The Block
-    world.setBlock(
-      result[0],
-      result[1],
-      result[2],
-      new Block(result[0], result[1], result[2], BlockType.Air)
-    );
-    console.log(result);
-  }
+  // const result = world.castRay(
+  //   playerPosition,
+  //   vec3.fromValues(
+  //     Math.sin(-playerDirection[0] - Math.PI) * Math.cos(-playerDirection[1]),
+  //     Math.sin(playerDirection[1]),
+  //     Math.cos(-playerDirection[0] - Math.PI) * Math.cos(-playerDirection[1])
+  //   ),
+  //   5
+  // );
+  // // if (result != undefined) {
+  //   // Clear The Block
+  //   world.setBlock(
+  //     result[0],
+  //     result[1],
+  //     result[2],
+  //     new Block(result[0], result[1], result[2], BlockType.Air)
+  //   );
+  //   console.log(result);
+  // }
   // Add Debug Cube At Cast
   const forward = vec3.scaleAndAdd(
     vec3.create(),

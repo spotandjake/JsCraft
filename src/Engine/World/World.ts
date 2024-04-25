@@ -73,7 +73,7 @@ class World {
     return vec3.fromValues(chunkX, chunkY, chunkZ);
   }
   private getBlockCoordinates(x: number, y: number, z: number) {
-    // TODO: I dont this this is correct
+    // TODO: I dont think this is correct
     return vec3.fromValues(
       x < 0 ? this.chunkSize + (x % this.chunkSize) : Math.abs(x % this.chunkSize),
       y < 0 ? this.chunkSize + (y % this.chunkSize) : Math.abs(y % this.chunkSize),
@@ -97,6 +97,7 @@ class World {
   }
   // Generate World
   private generateChunk(x: number, y: number, z: number) {
+    // TODO: Consider moving this into a shader running on a background canvas, disadvantage is we lose portability
     const chunkSize = this.chunkSize;
     const noise = this.noise;
     const seaLevel = -15;
@@ -134,14 +135,12 @@ class World {
         offsetY = 0,
         offsetZ = 0;
       for (offsetZ = 0; offsetZ < chunkSize; offsetZ++) {
+        const blockZ = offsetZ + worldZ;
         for (offsetY = 0; offsetY < chunkSize; offsetY++) {
+          const blockY = offsetY + worldY;
+          if (blockY > this.maxTerrainHeight) continue;
           for (offsetX = 0; offsetX < chunkSize; offsetX++) {
-            // Calculate world Cords
             const blockX = offsetX + worldX;
-            const blockY = offsetY + worldY;
-            const blockZ = offsetZ + worldZ;
-            // Generate World
-            if (blockY > this.maxTerrainHeight) continue;
             // Generate First Octave
             const amplitudeOne = 47.5;
             const spacingOne = 0.04;
@@ -342,6 +341,7 @@ class World {
       playerPosition[2]
     );
     // Render Chunks
+    // TODO: Only render the chunks currently in front of the player
     const renderChunks: Mesh[] = [];
     for (let x = -this.renderDistance; x < this.renderDistance; x++) {
       for (let y = -this.renderDistance; y < this.renderDistance; y++) {
@@ -357,7 +357,7 @@ class World {
         }
       }
     }
-    // Render Five Chunks From The Queue
+    // Render Chunks From The Queue
     for (let i = 0; i < Math.min(Math.pow(this.renderDistance, 3), this.renderQueue.length); i++) {
       const chunk = this.renderQueue.pop();
       if (chunk == undefined) break;

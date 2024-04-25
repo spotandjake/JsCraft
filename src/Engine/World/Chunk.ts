@@ -98,7 +98,7 @@ class Chunk {
               continue;
             }
             // Determine Which Sides Are Open
-            // TODO: Cross Chunk Culling
+            // Cross Chunk Culling
             if (this.canSeeThrough(x, y, z + 1, block)) {
               if (z === chunkSizeMinusOne) {
                 // Check Against The Block In The Next Chunk
